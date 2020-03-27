@@ -12,6 +12,12 @@ const Space = () => {
    return <span> &nbsp; </span>;
 };
 
+const goHome = () => {
+   setTimeout(() => {
+      window.location.href = '/home';
+   }, 500);
+};
+
 export const Navbar = (props) => {
    const handleClick = () => {
       props.toggleDrawer();
@@ -46,16 +52,27 @@ export const Navbar = (props) => {
                      marginRight: 25
                   }}
                >
-                  <HomeIcon
-                     className='pointer'
-                     style={{ fill: 'white', marginTop: 10 }}
-                     onClick={() => (window.location.href = '/home')}
-                  />
-                  <AccountCircleIcon
-                     className='pointer'
-                     style={{ fill: 'white', marginTop: 10 }}
-                     onClick={logout}
-                  />
+                  <Button
+                     aria-controls='simple-menu'
+                     aria-haspopup='true'
+                     onClick={() => goHome()}
+                  >
+                     <HomeIcon
+                        className='pointer'
+                        style={{ fill: 'white', marginTop: 10 }}
+                     />
+                  </Button>
+
+                  <Button
+                     aria-controls='simple-menu'
+                     aria-haspopup='true'
+                     onClick={() => logout()}
+                  >
+                     <AccountCircleIcon
+                        className='pointer'
+                        style={{ fill: 'white', marginTop: 10 }}
+                     />
+                  </Button>
                   <Space />
                </div>
             </Grid>

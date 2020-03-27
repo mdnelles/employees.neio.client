@@ -28,7 +28,7 @@ const useStyles = makeStyles({
    }
 });
 
-export const Users = () => {
+export const Employees = () => {
    const [open, setOpen] = useState(false);
    const [token, setToken] = useState('no token');
    const [users, setUsers] = useState([]);
@@ -135,7 +135,7 @@ export const Users = () => {
 
    return (
       <div id='main' className='body'>
-         <h3>Administrative Users</h3> <br />
+         <h3>Employees</h3> <br />
          <Msg
             msgClass={msgClass}
             spinnerClass={spinnerClass}

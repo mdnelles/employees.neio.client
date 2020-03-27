@@ -10,10 +10,23 @@ import { Home } from './components/Home';
 import { Loading } from './components/Loading';
 import { LogView } from './components/LogView';
 import { Navbar } from './widgets/Navbar';
+import { DrawerCus } from './widgets/DrawerCus';
 import { Users } from './components/Users';
+import { Employees } from './components/Employees';
+import { Departments } from './components/Departments';
+import { DeptManager } from './components/DeptManager';
+import { Titles } from './components/Titles';
+import { Salaries } from './components/Salaries';
+import { Statistics } from './components/Statistics';
+import { Settings } from './components/Settings';
 
 export const AppWrapper = () => {
-   const [activeSession, setActiveSession] = useState('loading');
+   const [activeSession, setActiveSession] = useState('loading'),
+      [drawerState, setDrawerState] = useState(false);
+
+   const toggleDrawer = () => {
+      setDrawerState(!drawerState);
+   };
 
    useEffect(() => {
       localForage
@@ -50,12 +63,24 @@ export const AppWrapper = () => {
    } else {
       ret = (
          <div>
-            <Navbar />
+            <Navbar toggleDrawer={toggleDrawer} />
+            <DrawerCus
+               drawerState={drawerState}
+               key={drawerState}
+               toggleDrawer={toggleDrawer}
+            />
             <div className='appHolder'>
                <Route exact path='/dba' component={Dba} />
                <Route exact path='/home' component={Home} />
                <Route exact path='/logs' component={LogView} />
                <Route exact path='/users' component={Users} />
+               <Route exact path='/employees' component={Employees} />
+               <Route exact path='/departments' component={Departments} />
+               <Route exact path='/dept_manager' component={DeptManager} />
+               <Route exact path='/titles' component={Titles} />
+               <Route exact path='/salaries' component={Salaries} />
+               <Route exact path='/stats' component={Statistics} />
+               <Route exact path='/settings' component={Settings} />
             </div>
          </div>
       );

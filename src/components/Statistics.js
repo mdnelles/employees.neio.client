@@ -28,7 +28,7 @@ const useStyles = makeStyles({
    }
 });
 
-export const Users = () => {
+export const Statistics = () => {
    const [open, setOpen] = useState(false);
    const [token, setToken] = useState('no token');
    const [users, setUsers] = useState([]);
@@ -135,120 +135,13 @@ export const Users = () => {
 
    return (
       <div id='main' className='body'>
-         <h3>Administrative Users</h3> <br />
+         <h3>Statistics</h3> <br />
          <Msg
             msgClass={msgClass}
             spinnerClass={spinnerClass}
             msg={msg}
             alertColor={alertColor}
          />
-         <Button variant='contained' color='primary' onClick={handleClickOpen}>
-            Add New User
-         </Button>
-         <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby='form-dialog-title'
-         >
-            <DialogTitle id='form-dialog-title'>Subscribe</DialogTitle>
-            <DialogContent>
-               <DialogContentText>Add New User</DialogContentText>
-               <TextField
-                  autoFocus
-                  margin='dense'
-                  defaultValue={email}
-                  id='email'
-                  label='Email Address'
-                  type='email'
-                  fullWidth
-                  onChange={(event) => setEmail(event.target.value)}
-               />
-               <TextField
-                  margin='dense'
-                  id='password'
-                  label='password'
-                  type='password'
-                  defaultValue={password}
-                  fullWidth
-                  onChange={(event) => setPassword(event.target.value)}
-               />
-               <TextField
-                  margin='dense'
-                  id='firstName'
-                  label='First Name'
-                  type='text'
-                  defaultValue={firstName}
-                  fullWidth
-                  onChange={(event) => setFirstName(event.target.value)}
-               />
-               <TextField
-                  margin='dense'
-                  id='lastName'
-                  label='Last Name'
-                  defaultValue={lastName}
-                  type='text'
-                  fullWidth
-                  onChange={(event) => setLastName(event.target.value)}
-               />
-            </DialogContent>
-            <DialogActions>
-               <Button
-                  onClick={handleClose}
-                  color='primary'
-                  variant='contained'
-               >
-                  Cancel
-               </Button>
-               <Button
-                  onClick={addUserStart}
-                  color='primary'
-                  variant='contained'
-               >
-                  Save New User
-               </Button>
-            </DialogActions>
-         </Dialog>
-         <br />
-         <br />
-         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label='simple table'>
-               <TableHead>
-                  <TableRow>
-                     <TableCell>ID</TableCell>
-                     <TableCell align='left'>Email</TableCell>
-                     <TableCell align='left'>First Name</TableCell>
-                     <TableCell align='left'>Last Name</TableCell>
-                     <TableCell align='left'>Last Login</TableCell>
-                     <TableCell align='left'></TableCell>
-                  </TableRow>
-               </TableHead>
-               <TableBody>
-                  {users.map((user) => (
-                     <TableRow key={user.uuid}>
-                        <TableCell component='th' scope='row'>
-                           {user.id}
-                        </TableCell>
-                        <TableCell align='left'>{user.email}</TableCell>
-                        <TableCell align='left'>{user.first_name}</TableCell>
-                        <TableCell align='left'>{user.last_name}</TableCell>
-                        <TableCell align='left'>
-                           {user.last_login !== undefined
-                              ? user.last_login.toString().replace('.000Z', '')
-                              : ''}
-                        </TableCell>
-                        <TableCell align='left'>
-                           <Button onClick={() => editUserStart(user.uuid)}>
-                              Edit
-                           </Button>
-                           <Button onClick={() => removeUserStart(user.uuid)}>
-                              Delete
-                           </Button>
-                        </TableCell>
-                     </TableRow>
-                  ))}
-               </TableBody>
-            </Table>
-         </TableContainer>
       </div>
    );
 };

@@ -28,7 +28,7 @@ const useStyles = makeStyles({
    }
 });
 
-export const Users = () => {
+export const DeptManager = () => {
    const [open, setOpen] = useState(false);
    const [token, setToken] = useState('no token');
    const [users, setUsers] = useState([]);
@@ -135,7 +135,7 @@ export const Users = () => {
 
    return (
       <div id='main' className='body'>
-         <h3>Administrative Users</h3> <br />
+         <h3>Department Managers</h3> <br />
          <Msg
             msgClass={msgClass}
             spinnerClass={spinnerClass}
@@ -143,7 +143,7 @@ export const Users = () => {
             alertColor={alertColor}
          />
          <Button variant='contained' color='primary' onClick={handleClickOpen}>
-            Add New User
+            Add New Department Manager
          </Button>
          <Dialog
             open={open}

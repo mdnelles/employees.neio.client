@@ -1,25 +1,14 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
 import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
 import SupervisorAccountRoundedIcon from '@material-ui/icons/SupervisorAccountRounded';
 import AccountTreeRoundedIcon from '@material-ui/icons/AccountTreeRounded';
 import AssignmentIndRoundedIcon from '@material-ui/icons/AssignmentIndRounded';
 import LocalAtmRoundedIcon from '@material-ui/icons/LocalAtmRounded';
 import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
-
-const useStyles = makeStyles((theme) => ({
-   root: {
-      width: '100%',
-      minWidth: 400,
-      maxWidth: 1000,
-      backgroundColor: theme.palette.background.paper
-   }
-}));
 
 function ListItemLink(props) {
    return <ListItem button component='a' {...props} />;

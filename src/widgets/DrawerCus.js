@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -18,6 +17,7 @@ import LocalAtmRoundedIcon from '@material-ui/icons/LocalAtmRounded';
 import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
 import StarsRoundedIcon from '@material-ui/icons/StarsRounded';
 import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded';
+import StorageIcon from '@material-ui/icons/Storage';
 
 const drawerWidth = 340;
 
@@ -78,10 +78,6 @@ const useStyles = makeStyles((theme) => ({
    }
 }));
 
-function ListItemLink(props) {
-   return <ListItem button component='a' {...props} />;
-}
-
 export const DrawerCus = (props) => {
    const classes = useStyles();
    const theme = useTheme();
@@ -89,18 +85,17 @@ export const DrawerCus = (props) => {
    // rerender in the approriate fashion
    const [open, setOpen] = React.useState(props.drawerState);
 
-   // this power is passed to the parent componet
-   // as opening will be done by external forces
+   const bClick = (link) => {
+      setTimeout(() => {
+         window.location.href = '/' + link;
+      }, 500);
+   };
 
-   // drawer still needs the ability to close itself
+   // drawer needs the ability to close itself
    const handleDrawerClose = () => {
       props.toggleDrawer();
       setOpen(false);
    };
-
-   React.useEffect(() => {
-      setOpen(props.drawerState);
-   }, []);
 
    const icolor = '#444444';
    const fs = '30px';
@@ -127,7 +122,7 @@ export const DrawerCus = (props) => {
             </div>
             <Divider />
             <List component='nav' aria-label='application stack'>
-               <ListItem button>
+               <ListItem button onClick={() => bClick('employees')}>
                   <ListItemAvatar>
                      <PersonRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -135,7 +130,7 @@ export const DrawerCus = (props) => {
                   </ListItemAvatar>
                   <ListItemText primary='Employees' />
                </ListItem>
-               <ListItem button>
+               <ListItem button onClick={() => bClick('departments')}>
                   <ListItemAvatar>
                      <AccountTreeRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -143,7 +138,7 @@ export const DrawerCus = (props) => {
                   </ListItemAvatar>
                   <ListItemText primary='Deptartments' />
                </ListItem>
-               <ListItem button>
+               <ListItem button onClick={() => bClick('dept_manager')}>
                   <ListItemAvatar>
                      <SupervisorAccountRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -151,7 +146,7 @@ export const DrawerCus = (props) => {
                   </ListItemAvatar>
                   <ListItemText primary='Department Managers' />
                </ListItem>
-               <ListItem button>
+               <ListItem button onClick={() => bClick('titles')}>
                   <ListItemAvatar>
                      <AssignmentIndRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -159,7 +154,7 @@ export const DrawerCus = (props) => {
                   </ListItemAvatar>
                   <ListItemText primary='Title' />
                </ListItem>
-               <ListItem button>
+               <ListItem button onClick={() => bClick('salaries')}>
                   <ListItemAvatar>
                      <LocalAtmRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -168,38 +163,36 @@ export const DrawerCus = (props) => {
                   <ListItemText primary='Salaries' />
                </ListItem>
 
-               <ListItem button disableGutters={true}>
-                  <ListItemLink href='https://github.com/mdnelles'>
-                     <ListItemAvatar>
-                        <EqualizerRoundedIcon
-                           style={{ fontSize: fs, fill: icolor }}
-                        />
-                     </ListItemAvatar>
-                     <ListItemText primary='Statistics' />
-                  </ListItemLink>
+               <ListItem button onClick={() => bClick('stats')}>
+                  <ListItemAvatar>
+                     <EqualizerRoundedIcon
+                        style={{ fontSize: fs, fill: icolor }}
+                     />
+                  </ListItemAvatar>
+                  <ListItemText primary='Statistics' />
                </ListItem>
 
                <Divider />
 
-               <ListItem button disableGutters={true}>
-                  <ListItemLink href='https://github.com/mdnelles'>
-                     <ListItemAvatar>
-                        <StarsRoundedIcon
-                           style={{ fontSize: fs, fill: icolor }}
-                        />
-                     </ListItemAvatar>
-                     <ListItemText primary='Admin Users' />
-                  </ListItemLink>
+               <ListItem button onClick={() => bClick('users')}>
+                  <ListItemAvatar>
+                     <StarsRoundedIcon style={{ fontSize: fs, fill: icolor }} />
+                  </ListItemAvatar>
+                  <ListItemText primary='Admin Users' />
                </ListItem>
-               <ListItem button disableGutters={true}>
-                  <ListItemLink href='https://github.com/mdnelles'>
-                     <ListItemAvatar>
-                        <SettingsRoundedIcon
-                           style={{ fontSize: fs, fill: icolor }}
-                        />
-                     </ListItemAvatar>
-                     <ListItemText primary='Settings' />
-                  </ListItemLink>
+               <ListItem button onClick={() => bClick('settings')}>
+                  <ListItemAvatar>
+                     <SettingsRoundedIcon
+                        style={{ fontSize: fs, fill: icolor }}
+                     />
+                  </ListItemAvatar>
+                  <ListItemText primary='Settings' />
+               </ListItem>
+               <ListItem button onClick={() => bClick('logs')}>
+                  <ListItemAvatar>
+                     <StorageIcon style={{ fontSize: fs, fill: icolor }} />
+                  </ListItemAvatar>
+                  <ListItemText primary='App Logs' />
                </ListItem>
             </List>
          </Drawer>
