@@ -12,16 +12,22 @@ const Space = () => {
    return <span> &nbsp; </span>;
 };
 
-export const Navbar = () => {
-   const handleClick = (event) => {
-      console.log('bring out the drawer');
+export const Navbar = (props) => {
+   const handleClick = () => {
+      props.toggleDrawer();
    };
 
    return (
       <div className='navAppBar'>
-         <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-               <div>
+         <Grid container spacing={1}>
+            <Grid item xs={6} sm={6}>
+               <div
+                  style={{
+                     width: '100%',
+                     textAlign: 'left',
+                     marginRight: 25
+                  }}
+               >
                   <Button
                      aria-controls='simple-menu'
                      aria-haspopup='true'
@@ -32,7 +38,7 @@ export const Navbar = () => {
                </div>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6} sm={6}>
                <div
                   style={{
                      width: '100%',

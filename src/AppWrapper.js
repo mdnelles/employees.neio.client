@@ -6,10 +6,11 @@ import { userIsLoggedIn } from './components/UserFunctions';
 import './App.css';
 
 import { Dba } from './components/Dba';
+import { Home } from './components/Home';
 import { Loading } from './components/Loading';
+import { LogView } from './components/LogView';
 import { Navbar } from './widgets/Navbar';
 import { Users } from './components/Users';
-import { LogView } from './components/LogView';
 
 export const AppWrapper = () => {
    const [activeSession, setActiveSession] = useState('loading');
@@ -52,8 +53,9 @@ export const AppWrapper = () => {
             <Navbar />
             <div className='appHolder'>
                <Route exact path='/dba' component={Dba} />
-               <Route exact path='/users' component={Users} />
+               <Route exact path='/home' component={Home} />
                <Route exact path='/logs' component={LogView} />
+               <Route exact path='/users' component={Users} />
             </div>
          </div>
       );

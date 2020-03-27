@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { login } from './UserFunctions';
-import { Msg } from './CustomWidget';
+import { Msg } from '../widgets/Msg';
 
 import localForage from 'localforage';
 
