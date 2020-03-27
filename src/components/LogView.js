@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getLogs, getLogsCount } from './LogFunctions';
 import localForage from 'localforage';
 
-import { Msg } from './CustomWidget';
+import { Msg } from '../widgets/Msg';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import ErrorIcon from '@material-ui/icons/Error';

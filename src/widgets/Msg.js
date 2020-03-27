@@ -13,7 +13,9 @@ export const Msg = (props) => {
          <div className={props.spinnerClass}>
             <CircularProgress />
          </div>
-         <Alert severity={props.alertColor}>{props.msg}</Alert>
+         <Alert severity={props.alertColor} variant='outlined'>
+            {props.msg}
+         </Alert>
       </div>
    );
 };

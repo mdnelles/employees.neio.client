@@ -7,7 +7,7 @@ import './App.css';
 
 import { Dba } from './components/Dba';
 import { Loading } from './components/Loading';
-import { Navbar } from './components/Navbar';
+import { Navbar } from './widgets/Navbar';
 import { Users } from './components/Users';
 import { LogView } from './components/LogView';
 

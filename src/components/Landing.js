@@ -16,7 +16,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
-import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import List from '@material-ui/core/List';
@@ -26,7 +25,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Popover from '@material-ui/core/Popover';
 
 const useStyles = makeStyles((theme) => ({
    root: {
@@ -48,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
    },
    avatar: {
       backgroundColor: red[500]
+   },
+   typography: {
+      padding: theme.spacing(2)
    }
 }));
 
@@ -64,16 +66,17 @@ export const Landing = () => {
       [alertColor, setAlertColor] = useState('info'),
       [msgClass, setMsgClass] = useState('displayBlock'),
       [spinnerClass, setSpinnerClass] = useState('displayNone'),
-      [expanded, setExpanded] = React.useState(false);
+      [expanded, setExpanded] = React.useState(false),
+      [popAnchorEl, setPopAnchorEl] = React.useState(null);
 
    const handleExpandClick = () => {
       setExpanded(!expanded);
    };
-   const vertClick = () => {
-      console.log('in vert click');
-   };
 
-   const helpClick = () => {};
+   const helpClick = (event) => {
+      setPopAnchorEl(event.currentTarget);
+      setMsgClass('displayNone');
+   };
 
    function butClick(e) {
       console.log('button clicked');
@@ -106,7 +109,7 @@ export const Landing = () => {
                   localForage.setItem('token', res);
 
                   setTimeout(() => {
-                     window.location.href = '/add';
+                     window.location.href = '/home';
                   }, 1000);
                } else {
                   console.log('+++ unhandled error here: ' + __filename);
@@ -119,6 +122,15 @@ export const Landing = () => {
             });
       }
    }
+
+   // begin popover
+   const popHandleClose = () => {
+      setPopAnchorEl(null);
+   };
+
+   const popOpen = Boolean(popAnchorEl);
+   const popId = popOpen ? 'simple-popover' : undefined;
+   // end popover
 
    useEffect(() => {}, []);
 
@@ -138,13 +150,8 @@ export const Landing = () => {
                         E
                      </Avatar>
                   }
-                  action={
-                     <IconButton aria-label='settings' onClick={vertClick}>
-                        <MoreVertIcon />
-                     </IconButton>
-                  }
-                  title='Nelles App '
-                  subheader='CRUD Employees'
+                  title='Nelles Employees App '
+                  subheader='CRUD: Create, Read, Update, Delete'
                />
                <CardMedia
                   className={classes.media}
@@ -182,15 +189,34 @@ export const Landing = () => {
                      color='textSecondary'
                      component='p'
                   >
-                     This application is for testing & to demonstrate
-                     competence. Please feel free to manipulate the data through
-                     the use of the CRUD functionality. Kindly keep it clean.
+                     This application is for testing.
+                     <br />
+                     Please feel free to manipulate the data through the use of
+                     the CRUD functionality. Kindly keep it clean.
                   </Typography>
                </CardContent>
                <CardActions disableSpacing>
                   <IconButton aria-label='Help' onClick={helpClick}>
                      <HelpOutlineIcon />
                   </IconButton>
+                  <Popover
+                     id={popId}
+                     open={popOpen}
+                     anchorEl={popAnchorEl}
+                     onClose={popHandleClose}
+                     anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center'
+                     }}
+                     transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center'
+                     }}
+                  >
+                     <Typography className={classes.typography}>
+                        To login use password: `nelles`
+                     </Typography>
+                  </Popover>
 
                   <IconButton
                      className={clsx(classes.expand, {

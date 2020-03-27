@@ -3,7 +3,7 @@ import { getUsers, removeUser, addUser } from './UserFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
 
-import { Msg } from './CustomWidget';
+import { Msg } from '../widgets/Msg';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
