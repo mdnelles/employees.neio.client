@@ -55,11 +55,17 @@ export const Users = () => {
       if (window.confirm('Are you sure you want to delete this?')) {
          if (theUuid !== undefined) {
             removeUser(theUuid, token)
-               .then((res) => {
+               .then(() => {
+                  setSpinnerClass('displayNone');
+                  setAlertColor('success');
+                  setMsg('User removed from database');
                   setUsers(users.filter((user) => user.uuid !== theUuid));
                })
                .catch((err) => {
                   console.log('Err: could not remove user ' + err);
+                  setSpinnerClass('displayNone');
+                  setAlertColor('error');
+                  setMsg('Error: ' + err);
                });
          }
       } else {
@@ -81,7 +87,7 @@ export const Users = () => {
          return str;
       }
    };
-   const addUserStart = (data) => {
+   const addUserStart = () => {
       setMsgClass('displayBlock');
       setSpinnerClass('displayBlock');
       setMsg('Adding user to database');
@@ -101,9 +107,12 @@ export const Users = () => {
       };
       setOpen(false);
       addUser(newUser, token).then((res) => {
-         console.log(res);
-         //setAllVals([...allVals,newData]);
-         setUsers([...users, newUser]);
+         getUsers(token).then((data) => {
+            setUsers(data);
+         });
+
+         //commenting this out (below) rather than update the state going back to the DB for id / last login
+         //setUsers([...users, newUser]);
          setEmail(''); // clear values
          setPassword('');
          setFirstName('');
@@ -122,7 +131,6 @@ export const Users = () => {
             setToken(theToken);
             getUsers(theToken).then((data) => {
                setUsers(data);
-               console.log(data);
             });
          })
          .catch(function(err) {

@@ -53,6 +53,20 @@ const useStyles = makeStyles((theme) => ({
    }
 }));
 
+const AtMdNelles = () => {
+   return (
+      <React.Fragment>
+         Author:{' '}
+         <a
+            href='https://github.com/mdnelles/employees.neio.client'
+            target='_blank'
+         >
+            @mdnelles
+         </a>
+      </React.Fragment>
+   );
+};
+
 function ListItemLink(props) {
    return <ListItem button component='a' {...props} />;
 }
@@ -150,8 +164,8 @@ export const Landing = () => {
                         E
                      </Avatar>
                   }
-                  title='Nelles Employees App '
-                  subheader='CRUD: Create, Read, Update, Delete'
+                  title='Employees App '
+                  subheader=<AtMdNelles />
                />
                <CardMedia
                   className={classes.media}
@@ -188,12 +202,7 @@ export const Landing = () => {
                      variant='body2'
                      color='textSecondary'
                      component='p'
-                  >
-                     This application is for testing.
-                     <br />
-                     Please feel free to manipulate the data through the use of
-                     the CRUD functionality. Kindly keep it clean.
-                  </Typography>
+                  ></Typography>
                </CardContent>
                <CardActions disableSpacing>
                   <IconButton aria-label='Help' onClick={helpClick}>
@@ -215,6 +224,12 @@ export const Landing = () => {
                   >
                      <Typography className={classes.typography}>
                         To login use password: `nelles`
+                        <br />
+                        This application is for demonstration purposes. CRUD:
+                        Create, Read, Update, Delete
+                        <br />
+                        Please feel free to manipulate the data through the use
+                        of the functionality. Kindly keep it clean.
                      </Typography>
                   </Popover>
 
@@ -231,7 +246,7 @@ export const Landing = () => {
                </CardActions>
                <Collapse in={expanded} timeout='auto' unmountOnExit>
                   <CardContent>
-                     Tech:
+                     Tech Stack:
                      <List component='nav' aria-label='application stack'>
                         <ListItem button>
                            <ListItemAvatar>
