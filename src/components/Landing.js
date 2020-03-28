@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { login } from './UserFunctions';
 import { Msg } from '../widgets/Msg';
-
 import localForage from 'localforage';
+
+import { useSpring, animated as a } from 'react-spring';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -148,160 +149,182 @@ export const Landing = () => {
 
    useEffect(() => {}, []);
 
+   const aprops1 = useSpring({
+      config: { duration: 500 },
+      from: { opacity: 0, marginTop: -200, scale: 0.5 },
+      to: { opacity: 1, marginTop: 0, scale: 1 },
+      delay: 100
+   });
+   const aprops2 = useSpring({
+      config: { duration: 1000 },
+      marginTop: 0,
+      from: { marginTop: -200 }
+   });
+
    return (
       <div className='vertical-center center-outer'>
          <div className='center-inner'>
-            <Msg
-               msgClass={msgClass}
-               spinnerClass={spinnerClass}
-               msg={msg}
-               alertColor={alertColor}
-            />
-            <Card className={classes.root}>
-               <CardHeader
-                  avatar={
-                     <Avatar aria-label='recipe' className={classes.avatar}>
-                        E
-                     </Avatar>
-                  }
-                  title='Employees App '
-                  subheader=<AtMdNelles />
+            <a.div style={aprops1}>
+               <Msg
+                  msgClass={msgClass}
+                  spinnerClass={spinnerClass}
+                  msg={msg}
+                  alertColor={alertColor}
                />
-               <CardMedia
-                  className={classes.media}
-                  image='/img/employees3.jpg'
-                  title='Employees'
-               />
-               <CardContent>
-                  <form>
-                     <div className='center-inner' style={{ padding: 10 }}>
-                        <TextField
-                           label='email'
-                           ariant='outlined'
-                           defaultValue={email}
-                           onChange={(event) => setEmail(event.target.value)}
-                        />
-                        <TextField
-                           label='Password'
-                           ariant='outlined'
-                           defaultValue={password}
-                           onChange={(event) => setPassword(event.target.value)}
-                        />
-                        <br />
-                        <br />
-                        <Button
-                           variant='contained'
-                           color='primary'
-                           onClick={butClick}
-                        >
-                           Login
-                        </Button>
-                     </div>
-                  </form>
-                  <Typography
-                     variant='body2'
-                     color='textSecondary'
-                     component='p'
-                  ></Typography>
-               </CardContent>
-               <CardActions disableSpacing>
-                  <IconButton aria-label='Help' onClick={helpClick}>
-                     <HelpOutlineIcon />
-                  </IconButton>
-                  <Popover
-                     id={popId}
-                     open={popOpen}
-                     anchorEl={popAnchorEl}
-                     onClose={popHandleClose}
-                     anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center'
-                     }}
-                     transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center'
-                     }}
-                  >
-                     <Typography className={classes.typography}>
-                        To login use password: `nelles`
-                        <br />
-                        This application is for demonstration purposes. CRUD:
-                        Create, Read, Update, Delete
-                        <br />
-                        Please feel free to manipulate the data through the use
-                        of the functionality. Kindly keep it clean.
-                     </Typography>
-                  </Popover>
-
-                  <IconButton
-                     className={clsx(classes.expand, {
-                        [classes.expandOpen]: expanded
-                     })}
-                     onClick={handleExpandClick}
-                     aria-expanded={expanded}
-                     aria-label='show more'
-                  >
-                     <ExpandMoreIcon />
-                  </IconButton>
-               </CardActions>
-               <Collapse in={expanded} timeout='auto' unmountOnExit>
+               <Card className={classes.root}>
+                  <CardHeader
+                     avatar={
+                        <Avatar aria-label='recipe' className={classes.avatar}>
+                           E
+                        </Avatar>
+                     }
+                     title='Employees App '
+                     subheader=<AtMdNelles />
+                  />
+                  <CardMedia
+                     className={classes.media}
+                     image='/img/employees3.jpg'
+                     title='Employees'
+                  />
                   <CardContent>
-                     Tech Stack:
-                     <List component='nav' aria-label='application stack'>
-                        <ListItem button>
-                           <ListItemAvatar>
-                              <Avatar alt='React' src='/img/icon/_react.png' />
-                           </ListItemAvatar>
-                           <ListItemText primary='React' />
-                        </ListItem>
-                        <ListItem button>
-                           <ListItemAvatar>
-                              <Avatar
-                                 alt='ExpressJS'
-                                 src='/img/icon/_express2.png'
-                              />
-                           </ListItemAvatar>
-                           <ListItemText primary='Express' />
-                        </ListItem>
-                        <ListItem button>
-                           <ListItemAvatar>
-                              <Avatar alt='NodeJS' src='/img/icon/_node.png' />
-                           </ListItemAvatar>
-                           <ListItemText primary='NodeJS' />
-                        </ListItem>
-                        <ListItem button>
-                           <ListItemAvatar>
-                              <Avatar
-                                 alt='Material US'
-                                 src='/img/icon/_material.png'
-                              />
-                           </ListItemAvatar>
-                           <ListItemText primary='Material UI' />
-                        </ListItem>
-                        <ListItem button>
-                           <ListItemAvatar>
-                              <Avatar
-                                 alt='MySQL Database'
-                                 src='/img/icon/_mysql.png'
-                              />
-                           </ListItemAvatar>
-                           <ListItemText primary='MySQL' />
-                        </ListItem>
-                        <ListItem button disableGutters={true}>
-                           <ListItemLink href='https://github.com/mdnelles'>
+                     <form>
+                        <div className='center-inner' style={{ padding: 10 }}>
+                           <TextField
+                              label='email'
+                              ariant='outlined'
+                              defaultValue={email}
+                              onChange={(event) => setEmail(event.target.value)}
+                           />
+                           <TextField
+                              label='Password'
+                              ariant='outlined'
+                              defaultValue={password}
+                              onChange={(event) =>
+                                 setPassword(event.target.value)
+                              }
+                           />
+                           <br />
+                           <br />
+                           <Button
+                              variant='contained'
+                              color='primary'
+                              onClick={butClick}
+                           >
+                              Login
+                           </Button>
+                        </div>
+                     </form>
+                     <Typography
+                        variant='body2'
+                        color='textSecondary'
+                        component='p'
+                     ></Typography>
+                  </CardContent>
+                  <CardActions disableSpacing>
+                     <IconButton aria-label='Help' onClick={helpClick}>
+                        <HelpOutlineIcon />
+                     </IconButton>
+                     <Popover
+                        id={popId}
+                        open={popOpen}
+                        anchorEl={popAnchorEl}
+                        onClose={popHandleClose}
+                        anchorOrigin={{
+                           vertical: 'bottom',
+                           horizontal: 'center'
+                        }}
+                        transformOrigin={{
+                           vertical: 'top',
+                           horizontal: 'center'
+                        }}
+                     >
+                        <Typography className={classes.typography}>
+                           To login use password: `nelles`
+                           <br />
+                           This application is for demonstration purposes. CRUD:
+                           Create, Read, Update, Delete
+                           <br />
+                           Please feel free to manipulate the data through the
+                           use of the functionality. Kindly keep it clean.
+                        </Typography>
+                     </Popover>
+
+                     <IconButton
+                        className={clsx(classes.expand, {
+                           [classes.expandOpen]: expanded
+                        })}
+                        onClick={handleExpandClick}
+                        aria-expanded={expanded}
+                        aria-label='show more'
+                     >
+                        <ExpandMoreIcon />
+                     </IconButton>
+                  </CardActions>
+                  <Collapse in={expanded} timeout='auto' unmountOnExit>
+                     <CardContent>
+                        Tech Stack:
+                        <List component='nav' aria-label='application stack'>
+                           <ListItem button>
                               <ListItemAvatar>
                                  <Avatar
-                                    alt='Github'
-                                    src='/img/icon/_github.png'
+                                    alt='React'
+                                    src='/img/icon/_react.png'
                                  />
                               </ListItemAvatar>
-                              <ListItemText primary='GitHub' />
-                           </ListItemLink>
-                        </ListItem>
-                     </List>
-                  </CardContent>
-               </Collapse>
-            </Card>
+                              <ListItemText primary='React' />
+                           </ListItem>
+                           <ListItem button>
+                              <ListItemAvatar>
+                                 <Avatar
+                                    alt='ExpressJS'
+                                    src='/img/icon/_express2.png'
+                                 />
+                              </ListItemAvatar>
+                              <ListItemText primary='Express' />
+                           </ListItem>
+                           <ListItem button>
+                              <ListItemAvatar>
+                                 <Avatar
+                                    alt='NodeJS'
+                                    src='/img/icon/_node.png'
+                                 />
+                              </ListItemAvatar>
+                              <ListItemText primary='NodeJS' />
+                           </ListItem>
+                           <ListItem button>
+                              <ListItemAvatar>
+                                 <Avatar
+                                    alt='Material US'
+                                    src='/img/icon/_material.png'
+                                 />
+                              </ListItemAvatar>
+                              <ListItemText primary='Material UI' />
+                           </ListItem>
+                           <ListItem button>
+                              <ListItemAvatar>
+                                 <Avatar
+                                    alt='MySQL Database'
+                                    src='/img/icon/_mysql.png'
+                                 />
+                              </ListItemAvatar>
+                              <ListItemText primary='MySQL' />
+                           </ListItem>
+                           <ListItem button disableGutters={true}>
+                              <ListItemLink href='https://github.com/mdnelles'>
+                                 <ListItemAvatar>
+                                    <Avatar
+                                       alt='Github'
+                                       src='/img/icon/_github.png'
+                                    />
+                                 </ListItemAvatar>
+                                 <ListItemText primary='GitHub' />
+                              </ListItemLink>
+                           </ListItem>
+                        </List>
+                     </CardContent>
+                  </Collapse>
+               </Card>
+            </a.div>
          </div>
       </div>
    );
