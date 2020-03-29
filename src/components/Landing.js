@@ -79,7 +79,8 @@ export const Landing = () => {
       [password, setPassword] = useState(''),
       [msg, setMsg] = useState('Enter valid credentials to proceed'),
       [alertColor, setAlertColor] = useState('info'),
-      [msgClass, setMsgClass] = useState('displayBlock'),
+      [msgClass, setMsgClass] = useState('displayNone'),
+      [msgClasses, setMsgClasses] = useState([]),
       [spinnerClass, setSpinnerClass] = useState('displayNone'),
       [expanded, setExpanded] = React.useState(false),
       [popAnchorEl, setPopAnchorEl] = React.useState(null);
@@ -100,6 +101,8 @@ export const Landing = () => {
       setAlertColor('info');
       setMsgClass('displayBlock');
       setMsg('Checking credentials...');
+      setMsgClasses([]);
+      setMsgClasses(['anim90x0']);
       const user = {
          email: email,
          password: password
@@ -115,6 +118,7 @@ export const Landing = () => {
       ) {
          setSpinnerClass('displayNone');
          setMsg('Please ender valid login credentials');
+         setMsgClasses(['anim90x0']);
          setAlertColor('error');
       } else {
          localForage.setItem('token', false); // clear old token if exists
@@ -130,6 +134,7 @@ export const Landing = () => {
                   console.log('+++ unhandled error here: ' + __filename);
                   setSpinnerClass('displayNone');
                   setMsg('Login Failed');
+                  setMsgClasses(['anim90x0']);
                }
             })
             .catch((err) => {
@@ -147,29 +152,29 @@ export const Landing = () => {
    const popId = popOpen ? 'simple-popover' : undefined;
    // end popover
 
-   useEffect(() => {}, []);
+   useEffect(() => {}, [msgClasses]);
 
-   const aprops1 = useSpring({
-      config: { duration: 500 },
-      from: { opacity: 0, marginTop: -200, scale: 0.5 },
-      to: { opacity: 1, marginTop: 0, scale: 1 },
+   const aprops = useSpring({
+      config: { duration: 700 },
+      from: {
+         opacity: 0
+      },
+      to: {
+         opacity: 1
+      },
       delay: 100
-   });
-   const aprops2 = useSpring({
-      config: { duration: 1000 },
-      marginTop: 0,
-      from: { marginTop: -200 }
    });
 
    return (
       <div className='vertical-center center-outer'>
          <div className='center-inner'>
-            <a.div style={aprops1}>
+            <a.div style={aprops}>
                <Msg
                   msgClass={msgClass}
                   spinnerClass={spinnerClass}
                   msg={msg}
                   alertColor={alertColor}
+                  msgClasses={msgClasses}
                />
                <Card className={classes.root}>
                   <CardHeader

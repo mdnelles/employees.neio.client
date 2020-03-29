@@ -3,11 +3,6 @@ body {
    font-family: Ubuntu, 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
       'Lucida Sans', Arial, sans-serif;
 }
-.App {
-   /*
-  text-align: center;
-  */
-}
 
 .App-logo {
    height: 40vmin;
@@ -154,4 +149,51 @@ body {
    z-index: 10;
    overflow: visible;
    cursor: pointer;
+}
+
+/* animations */
+.anim90x0 {
+   animation-duration: 1s;
+   animation-name: anim90x0-kf;
+   animation-iteration-count: 1;
+}
+
+@keyframes anim90x0-kf {
+   from {
+      transform: rotateX(90deg);
+   }
+
+   to {
+      transform: rotateX(0deg);
+   }
+}
+
+.animFadeOut {
+   animation-duration: 1s;
+   animation-name: fadeOut-kf;
+   animation-iteration-count: 1;
+   animation-direction: forward;
+   animation-timing-function: ease-in-out;
+}
+@keyframes fadeOut-kf {
+   from {
+      opacity: 1;
+   }
+   to {
+      opacity: 0;
+   }
+}
+
+.animFadeIn {
+   animation-duration: 1s;
+   animation-name: fadeIn-kf;
+   animation-iteration-count: 1;
+}
+@keyframes fadeIn-kf {
+   from {
+      opacity: 0;
+   }
+   to {
+      opacity: 1;
+   }
 }
