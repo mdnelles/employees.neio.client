@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import { logout } from '../components/UserFunctions';
+import { logout } from '../UserFunctions';
 
 const Space = () => {
    return <span> &nbsp; </span>;

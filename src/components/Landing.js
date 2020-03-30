@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { login } from './UserFunctions';
-import { Msg } from '../widgets/Msg';
+import { Msg } from './widgets/Msg';
 import localForage from 'localforage';
+import { CubitMsg } from './3d/CubitMsg';
+import uuid from 'uuid';
 
 import { useSpring, animated as a } from 'react-spring';
 
@@ -68,6 +70,8 @@ const AtMdNelles = () => {
    );
 };
 
+const animYx90 = ['afwdY09', 'afwdY918', 'afwdY1827', 'afwdY2736'];
+
 function ListItemLink(props) {
    return <ListItem button component='a' {...props} />;
 }
@@ -83,7 +87,10 @@ export const Landing = () => {
       [msgClasses, setMsgClasses] = useState([]),
       [spinnerClass, setSpinnerClass] = useState('displayNone'),
       [expanded, setExpanded] = React.useState(false),
-      [popAnchorEl, setPopAnchorEl] = React.useState(null);
+      [arrYcount, setArrYcount] = useState(3),
+      [cubitAnim, setCubitAnim] = useState('noAnim'),
+      [popAnchorEl, setPopAnchorEl] = React.useState(null),
+      [cubitKey, setCubitKey] = React.useState(uuid());
 
    const handleExpandClick = () => {
       setExpanded(!expanded);
@@ -95,7 +102,11 @@ export const Landing = () => {
    };
 
    function butClick(e) {
-      console.log('button clicked');
+      let temp = arrYcount + 1;
+      temp > 3 ? setArrYcount(0) : setArrYcount(temp);
+      setCubitAnim(animYx90[arrYcount]);
+      setCubitKey(uuid());
+      console.log('cubitAnim = ' + cubitAnim);
       e.preventDefault();
       setSpinnerClass('displayBlock');
       setAlertColor('info');
@@ -152,7 +163,7 @@ export const Landing = () => {
    const popId = popOpen ? 'simple-popover' : undefined;
    // end popover
 
-   useEffect(() => {}, [msgClasses]);
+   useEffect(() => {}, [msgClasses, arrYcount]);
 
    const aprops = useSpring({
       config: { duration: 700 },
@@ -168,14 +179,25 @@ export const Landing = () => {
    return (
       <div className='vertical-center center-outer'>
          <div className='center-inner'>
+            <Msg
+               msgClass={msgClass}
+               spinnerClass={spinnerClass}
+               msg={msg}
+               alertColor={alertColor}
+               msgClasses={msgClasses}
+            />
+            <div className={cubitAnim}>
+               <CubitMsg key={cubitKey} />
+               {/*<CubitMsg
+                  right='right'
+                  left='left'
+                  front='front'
+                  back='back'
+                  top='top'
+                  bottom='bottom'
+               />*/}
+            </div>
             <a.div style={aprops}>
-               <Msg
-                  msgClass={msgClass}
-                  spinnerClass={spinnerClass}
-                  msg={msg}
-                  alertColor={alertColor}
-                  msgClasses={msgClasses}
-               />
                <Card className={classes.root}>
                   <CardHeader
                      avatar={
