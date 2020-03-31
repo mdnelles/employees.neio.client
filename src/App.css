@@ -511,28 +511,28 @@ body {
    animation-name: noAnimKey;
    /*animation-fill-mode: forward; */
 }
-.roll1 {
-   animation-duration: 0.5s;
+.aroll1 {
+   animation-duration: 0.3s;
    animation-iteration-count: 1;
-   animation-name: fwd09;
+   animation-name: fwd2736;
    animation-fill-mode: forward;
 }
-.roll2 {
-   animation-duration: 0.5s;
+.aroll3 {
+   animation-duration: 0.3s;
    animation-iteration-count: 1;
    animation-name: fwd918;
    animation-fill-mode: forward;
 }
-.roll3 {
-   animation-duration: 0.5s;
+.aroll4 {
+   animation-duration: 0.3s;
    animation-iteration-count: 1;
    animation-name: fwd1827;
    animation-fill-mode: forward;
 }
-.roll4 {
-   animation-duration: 0.5s;
+.aroll2 {
+   animation-duration: 0.3s;
    animation-iteration-count: 1;
-   animation-name: fwd2736;
+   animation-name: fwd09;
    animation-fill-mode: forward;
 }
 .flipAnimFwd {
@@ -595,7 +595,12 @@ body {
    transform-style: preserve-3d;
 }
 
-#side1 {
+#roll0 {
+   transform: translateX(0px) translateY(0px) translateZ(38px);
+   -moz-transform: translateX(0px) translateY(0px) translateZ(38px);
+   -webkit-transform: translateX(0px) translateY(0px) translateZ(38px);
+}
+#roll1 {
    transform: rotateX(90deg) translateX(0px) translateY(0px) translateZ(38px);
    -moz-transform: rotateX(90deg) translateX(0px) translateY(0px)
       translateZ(38px);
@@ -603,35 +608,14 @@ body {
       translateZ(38px);
    background-color: #fff;
 }
-#side2 {
-   transform: rotateY(-90deg) translateX(0px) translateY(0px) translateZ(38px);
-   -moz-transform: rotateY(-90deg) translateX(0px) translateY(0px)
-      translateZ(38px);
-   -webkit-transform: rotateY(-90deg) translateX(0px) translateY(0px)
-      translateZ(38px);
-   background-color: #ffaf1c;
-}
-#side3 {
-   transform: translateX(0px) translateY(0px) translateZ(38px);
-   -moz-transform: translateX(0px) translateY(0px) translateZ(38px);
-   -webkit-transform: translateX(0px) translateY(0px) translateZ(38px);
-}
-#side4 {
-   transform: rotateY(90deg) translateX(0px) translateY(0px) translateZ(38px);
-   -moz-transform: rotateY(90deg) translateX(0px) translateY(0px)
-      translateZ(38px);
-   -webkit-transform: rotateY(90deg) translateX(0px) translateY(0px)
-      translateZ(38px);
-   background-color: #ed3030;
-}
-#side5 {
+#roll2 {
    transform: rotateX(180deg) translateX(0px) translateY(0px) translateZ(38px);
    -moz-transform: rotateX(180deg) translateX(0px) translateY(0px)
       translateZ(38px);
    -webkit-transform: rotateX(180deg) translateX(0px) translateY(0px)
       translateZ(38px);
 }
-#side6 {
+#roll3 {
    transform: rotateX(-90deg) translateX(0px) translateY(0px) translateZ(38px);
    -moz-transform: rotateX(-90deg) translateX(0px) translateY(0px)
       translateZ(38px);
@@ -641,7 +625,21 @@ body {
 /* end cube */
 /* /////// End k3d objects ////// */
 .cubeWrapper {
+   /* for login page */
    width: 345px;
+   height: 76px;
+   top: 0px;
+   animation-fill-mode: forwards;
+   -webkit-transition: all 0.5s ease-in-out;
+   transition: all 0.5s ease-in-out;
+   overflow: visible;
+   -moz-transform-style: preserve-3d;
+   -webkit-transform-style: preserve-3d;
+   transform-style: preserve-3d;
+   transform-origin: center center;
+}
+
+.cubeWrapperFluid {
    height: 76px;
    top: 0px;
    animation-fill-mode: forwards;
@@ -658,4 +656,7 @@ body {
    -webkit-perspective: 800px;
    perspective: 800px;
    position: absolute;
+   min-width: 365px;
+   padding-left: 10px;
+   padding-right: 10px;
 }

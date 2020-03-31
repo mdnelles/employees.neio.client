@@ -12,28 +12,29 @@ export const CubeMsg = (props) => {
             marginTop: props.marginT
          }}
       >
-         <CubeSide id='side1' width={props.width}>
+         <CubeSide id='roll0' width={props.width}>
             <Msg
                msg={props.msgArr[0].msg}
                alertColor={props.msgArr[0].alertColor}
                width={props.width}
             />
          </CubeSide>
-         <CubeSide id='side3' width={props.width}>
+         <CubeSide id='roll1' width={props.width}>
             <Msg
                msg={props.msgArr[1].msg}
                alertColor={props.msgArr[1].alertColor}
                width={props.width}
             />
          </CubeSide>
-         <CubeSide id='side5' width={props.width}>
+
+         <CubeSide id='roll2' width={props.width}>
             <Msg
                msg={props.msgArr[2].msg}
                alertColor={props.msgArr[2].alertColor}
                width={props.width}
             />
          </CubeSide>
-         <CubeSide id='side6' width={props.width}>
+         <CubeSide id='roll3' width={props.width}>
             <Msg
                msg={props.msgArr[3].msg}
                alertColor={props.msgArr[3].alertColor}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { login } from './UserFunctions';
-import { Msg } from './widgets/Msg';
 import localForage from 'localforage';
 import { CubeMsg } from './3d/CubeMsg';
+import { cubeMsgNext, obj } from './_sharedFunctions';
 import uuid from 'uuid';
 
 import { useSpring, animated as a } from 'react-spring';
@@ -63,23 +63,14 @@ function ListItemLink(props) {
 
 export const Landing = () => {
    const classes = useStyles();
-   let obj = [
-      { msg: 'Enter valid credentials to proceed', alertColor: 'error' },
-      { msg: 'MSG 2', alertColor: 'warning' },
-      { msg: 'MSG 3', alertColor: 'info' },
-      { msg: 'MSG 4', alertColor: 'success' }
-   ];
-   let anims = ['roll1', 'roll2', 'roll3', 'roll4'];
 
    const [email, setEmail] = useState('mxnelles@gmail.com'),
       [password, setPassword] = useState(''),
       [spinnerClass, setSpinnerClass] = useState('displayNone'),
       [expanded, setExpanded] = React.useState(false),
-      [num, setNum] = useState(0),
       [msgArr, setMsgArr] = useState(obj),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState(''),
-      [popAnchorEl, setPopAnchorEl] = React.useState(null),
-      [cubeKey, setCubeKey] = React.useState(uuid());
+      [popAnchorEl, setPopAnchorEl] = React.useState(null);
 
    const handleExpandClick = () => {
       setExpanded(!expanded);
@@ -87,26 +78,22 @@ export const Landing = () => {
 
    const helpClick = (event) => {
       setPopAnchorEl(event.currentTarget);
+      setMsgArr(
+         cubeMsgNext('Use the password `nelles` to login', 'success', msgArr)
+      );
+      // find number of next up slide and then update state of Cube Wrapper to trigger roll
+      setCubeWrapperAnim(
+         msgArr[msgArr.findIndex((el) => el.current === true)].anim
+      );
    };
 
-   function spin() {
-      setCubeWrapperAnim(anims[num]);
-      setNum(num + 1 < 4 ? num + 1 : 0);
-      console.log(cubeWrapperAnim);
-   }
-
    function butClick(e) {
-      let anim =
-         cubeWrapperAnim === 'flipAnimFwd' ? 'flipAnimBack' : 'flipAnimFwd';
-      setCubeWrapperAnim(anim);
-      setCubeKey(uuid());
-      //console.log('cubeAnim = ' + cubeAnim);
-      console.log('cubeWrapperAnim = ' + cubeWrapperAnim);
+      setMsgArr(cubeMsgNext('Checking credentials ...', 'info', msgArr));
+      // find number of next up slide and then update state of Cube Wrapper to trigger roll
+      setCubeWrapperAnim(
+         msgArr[msgArr.findIndex((el) => el.current === true)].anim
+      );
 
-      setSpinnerClass('displayBlock');
-      //setAlertColor('success');
-      //setMsg('Checking credentials...');
-      //setMsgArr(msgArr[num].msg);
       const user = {
          email: email,
          password: password
@@ -120,9 +107,20 @@ export const Landing = () => {
          password === undefined ||
          password === ''
       ) {
-         setSpinnerClass('displayNone');
-         //setMsg('Please enter valid login credentials');
-         //setAlertColor('error');
+         setTimeout(() => {
+            setSpinnerClass('displayNone');
+            setMsgArr(
+               cubeMsgNext(
+                  'Login Failed using password: ' + password,
+                  'error',
+                  msgArr
+               )
+            );
+            setCubeWrapperAnim(
+               msgArr[msgArr.findIndex((el) => el.current === true)].anim
+            );
+         }, 500);
+         // find number of next up slide and then update state of Cube Wrapper to trigger roll
       } else {
          localForage.setItem('token', false); // clear old token if exists
          login(user)
@@ -132,14 +130,30 @@ export const Landing = () => {
 
                   setTimeout(() => {
                      window.location.href = '/home';
-                  }, 1000);
+                  }, 350);
                } else {
                   console.log('+++ unhandled error here: ' + __filename);
                   setSpinnerClass('displayNone');
+                  setMsgArr(cubeMsgNext('Login Failed ', 'error', msgArr));
+                  setCubeWrapperAnim(
+                     msgArr[msgArr.findIndex((el) => el.current === true)].anim
+                  );
+                  //setSpinnerClass('displayNone');
                   //       setMsg('Login Failed');
                }
             })
             .catch((err) => {
+               setMsgArr(
+                  cubeMsgNext(
+                     'Login Failed (catch err) please contact the admin',
+                     'error',
+                     msgArr
+                  )
+               );
+
+               setCubeWrapperAnim(
+                  msgArr[msgArr.findIndex((el) => el.current === true)].anim
+               );
                console.log('+++ error in file: ' + __filename + 'err=' + err);
             });
       }
@@ -154,7 +168,15 @@ export const Landing = () => {
    const popId = popOpen ? 'simple-popover' : undefined;
    // end popover
 
-   useEffect(() => {}, []);
+   useEffect(() => {
+      setMsgArr(
+         cubeMsgNext('Enter valid credentials to proceed', 'Info', msgArr)
+      );
+
+      setCubeWrapperAnim(
+         msgArr[msgArr.findIndex((el) => el.current === true)].anim
+      );
+   }, []);
 
    const aprops = useSpring({
       config: { duration: 700 },
@@ -177,7 +199,6 @@ export const Landing = () => {
                <div className={'cubeWrapper ' + cubeWrapperAnim} id='stage'>
                   <CubeMsg
                      msgArr={msgArr}
-                     key={cubeKey}
                      width={'100%'}
                      height={78}
                      marginT={-60}
@@ -227,13 +248,6 @@ export const Landing = () => {
                            >
                               Login
                            </Button>
-                           <Button
-                              variant='contained'
-                              color='primary'
-                              onClick={spin}
-                           >
-                              spin
-                           </Button>
                         </div>
                      </form>
                      <Typography
@@ -261,8 +275,6 @@ export const Landing = () => {
                         }}
                      >
                         <Typography className={classes.typography}>
-                           To login use password: `nelles`
-                           <br />
                            This application is for demonstration purposes. CRUD:
                            Create, Read, Update, Delete
                            <br />

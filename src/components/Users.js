@@ -3,7 +3,8 @@ import { getUsers, removeUser, addUser } from './UserFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
 
-import { Msg } from './widgets/Msg';
+import { cubeMsgNext, obj } from './_sharedFunctions';
+import { CubeMsg } from './3d/CubeMsg';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -14,6 +15,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 
+import MaterialTable from 'material-table';
+/*
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -21,6 +24,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+*/
 
 const useStyles = makeStyles({
    table: {
@@ -29,26 +33,33 @@ const useStyles = makeStyles({
 });
 
 export const Users = () => {
-   const [open, setOpen] = useState(false);
-   const [token, setToken] = useState('no token');
-   const [users, setUsers] = useState([]);
-   const [email, setEmail] = useState('');
-   const [password, setPassword] = useState('');
-   const [firstName, setFirstName] = useState('');
-   const [lastName, setLastName] = useState('');
+   const [open, setOpen] = useState(false),
+      [token, setToken] = useState('no token'),
+      [users, setUsers] = useState([]),
+      [email, setEmail] = useState(''),
+      [password, setPassword] = useState(''),
+      [firstName, setFirstName] = useState(''),
+      [lastName, setLastName] = useState(''),
+      [msgArr, setMsgArr] = useState(obj),
+      [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
-   const [msgClass, setMsgClass] = useState('displayNone');
-   const [spinnerClass, setSpinnerClass] = useState('displayNone');
-   const [msg, setMsg] = useState('');
-   const [alertColor, setAlertColor] = useState('info');
+   const [state, setState] = useState();
 
    const classes = useStyles();
 
    const editUserStart = (theUuid) => {
-      setSpinnerClass('displayNone');
-      setMsgClass('displayBlock');
-      setAlertColor('error');
-      setMsg('Edit Feature has been disabled for this app');
+      //setSpinnerClass('displayNone');
+      setMsgArr(
+         cubeMsgNext(
+            'Edit Feature has been disabled for this app',
+            'error',
+            msgArr
+         )
+      );
+      // find number of next up slide and then update state of Cube Wrapper to trigger roll
+      setCubeWrapperAnim(
+         msgArr[msgArr.findIndex((el) => el.current === true)].anim
+      );
    };
 
    const removeUserStart = (theUuid) => {
@@ -56,16 +67,26 @@ export const Users = () => {
          if (theUuid !== undefined) {
             removeUser(theUuid, token)
                .then(() => {
-                  setSpinnerClass('displayNone');
-                  setAlertColor('success');
-                  setMsg('User removed from database');
+                  //setSpinnerClass('displayNone');
+                  setMsgArr(
+                     cubeMsgNext(
+                        'User removed from database',
+                        'Success',
+                        msgArr
+                     )
+                  );
+                  setCubeWrapperAnim(
+                     msgArr[msgArr.findIndex((el) => el.current === true)].anim
+                  );
                   setUsers(users.filter((user) => user.uuid !== theUuid));
                })
                .catch((err) => {
                   console.log('Err: could not remove user ' + err);
-                  setSpinnerClass('displayNone');
-                  setAlertColor('error');
-                  setMsg('Error: ' + err);
+                  //setSpinnerClass('displayNone');
+                  setMsgArr(cubeMsgNext('Error: ' + err, 'error', msgArr));
+                  setCubeWrapperAnim(
+                     msgArr[msgArr.findIndex((el) => el.current === true)].anim
+                  );
                });
          }
       } else {
@@ -88,9 +109,11 @@ export const Users = () => {
       }
    };
    const addUserStart = () => {
-      setMsgClass('displayBlock');
-      setSpinnerClass('displayBlock');
-      setMsg('Adding user to database');
+      //setSpinnerClass('displayBlock');
+      setMsgArr(cubeMsgNext('Adding User to Database...', 'success', msgArr));
+      setCubeWrapperAnim(
+         msgArr[msgArr.findIndex((el) => el.current === true)].anim
+      );
 
       setFirstName(clearUndefined(firstName));
       setLastName(clearUndefined(lastName));
@@ -118,25 +141,45 @@ export const Users = () => {
          setPassword('');
          setFirstName('');
          setLastName('');
-         setSpinnerClass('displayNone');
-         setAlertColor('success');
-         setMsg('New Entry added to Database');
+         //setSpinnerClass('displayNone');
+         setMsgArr(
+            cubeMsgNext('New entry added to database', 'success', msgArr)
+         );
+         // find number of next up slide and then update state of Cube Wrapper to trigger roll
+         setCubeWrapperAnim(
+            msgArr[msgArr.findIndex((el) => el.current === true)].anim
+         );
       });
    };
 
    useEffect(() => {
-      //localForage.getItem('token', function(err, theToken) {
+      setMsgArr(cubeMsgNext('Loading Users', 'Info', msgArr));
+      setCubeWrapperAnim(
+         msgArr[msgArr.findIndex((el) => el.current === true)].anim
+      );
       localForage
          .getItem('token')
          .then(function(theToken) {
             setToken(theToken);
             getUsers(theToken).then((data) => {
-               console.log(data);
+               setMsgArr(cubeMsgNext('Users Loaded', 'success', msgArr));
+               setCubeWrapperAnim(
+                  msgArr[msgArr.findIndex((el) => el.current === true)].anim
+               );
                setUsers(data);
+               setState({
+                  columns: [
+                     { title: 'ID', field: 'id', type: 'numeric' },
+                     { title: 'Email', field: 'email' },
+                     { title: 'First Name', field: 'first_name' },
+                     { title: 'Last Name', field: 'last_name' },
+                     { title: 'Last Seen', field: 'last_login' }
+                  ],
+                  data: data
+               });
             });
          })
          .catch(function(err) {
-            // This code runs if there were any errors
             console.log(err);
             alert('no token found');
             window.location.href = '/';
@@ -145,14 +188,19 @@ export const Users = () => {
 
    return (
       <div id='main' className='body'>
-         <h3>Administrative Users</h3> <br />
-         {/*
-         <Msg
-            msgClass={msgClass}
-            spinnerClass={spinnerClass}
-            msg={msg}
-            alertColor={alertColor}
-         /> */}
+         <h3>Administrative Users</h3>
+         <div style={{ padding: 30, display: 'block' }}></div>
+         <div className='contain '>
+            <div className={'cubeWrapperFluid ' + cubeWrapperAnim} id='stage'>
+               <CubeMsg
+                  msgArr={msgArr}
+                  width={'100%'}
+                  height={78}
+                  marginT={-60}
+               />
+            </div>
+         </div>
+         <div style={{ padding: 15, display: 'block' }}></div>
          <Button variant='contained' color='primary' onClick={handleClickOpen}>
             Add New User
          </Button>
@@ -221,6 +269,52 @@ export const Users = () => {
          </Dialog>
          <br />
          <br />
+         {/*}
+         <MaterialTable
+      title="Editable Example"
+      columns={state.columns}
+      data={state.data}
+      editable={{
+        onRowAdd: (newData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              setState((prevState) => {
+                const data = [...prevState.data];
+                data.push(newData);
+                return { ...prevState, data };
+              });
+            }, 600);
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              if (oldData) {
+                setState((prevState) => {
+                  const data = [...prevState.data];
+                  data[data.indexOf(oldData)] = newData;
+                  return { ...prevState, data };
+                });
+              }
+            }, 600);
+          }),
+        onRowDelete: (oldData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              setState((prevState) => {
+                const data = [...prevState.data];
+                data.splice(data.indexOf(oldData), 1);
+                return { ...prevState, data };
+              });
+            }, 600);
+          }),
+      }}
+    />
+
+    */}
+         {/* 
          <TableContainer component={Paper}>
             <Table className={classes.table} aria-label='simple table'>
                <TableHead>
@@ -260,6 +354,7 @@ export const Users = () => {
                </TableBody>
             </Table>
          </TableContainer>
+         */}
       </div>
    );
 };
