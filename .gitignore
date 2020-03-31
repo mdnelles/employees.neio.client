@@ -8,7 +8,7 @@ node_modules
 /coverage
 
 #proprietary
-/components/3d
+/src/components/3d
 # production
 /build
 
