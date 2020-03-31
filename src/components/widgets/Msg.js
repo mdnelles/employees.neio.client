@@ -10,10 +10,7 @@ export const Msg = (props) => {
    let alertTitle = props.alertColor.replace(/^./, (str) => str.toUpperCase());
    //console.log('in msg');
    return (
-      <div
-         className={'outerz ' + props.msgClasses.join(' ')}
-         style={{ width: props.width }}
-      >
+      <div style={{ width: props.width }}>
          <div style={ms} style={{ width: props.width }}>
             <Alert severity={props.alertColor} variant='filled'>
                <AlertTitle>{alertTitle}</AlertTitle>

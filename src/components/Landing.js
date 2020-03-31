@@ -64,29 +64,22 @@ function ListItemLink(props) {
 export const Landing = () => {
    const classes = useStyles();
    let obj = [
-      { msg: '', alertColor: '', msgClass: '' },
-      { msg: '', alertColor: '', msgClass: '' },
-      { msg: '', alertColor: '', msgClass: '' },
-      { msg: '', alertColor: '', msgClass: '' }
+      { msg: 'Enter valid credentials to proceed', alertColor: 'error' },
+      { msg: 'MSG 2', alertColor: 'warning' },
+      { msg: 'MSG 3', alertColor: 'info' },
+      { msg: 'MSG 4', alertColor: 'success' }
    ];
+   let anims = ['roll1', 'roll2', 'roll3', 'roll4'];
 
    const [email, setEmail] = useState('mxnelles@gmail.com'),
       [password, setPassword] = useState(''),
-      [msg, setMsg] = useState('Enter valid credentials to proceed'),
-      [alertColor, setAlertColor] = useState('info'),
-      [msgClass, setMsgClass] = useState('displayBlock'),
-      [msgClasses, setMsgClasses] = useState([]),
       [spinnerClass, setSpinnerClass] = useState('displayNone'),
       [expanded, setExpanded] = React.useState(false),
-      [arrYcount, setArrYcount] = useState(3),
       [num, setNum] = useState(0),
       [msgArr, setMsgArr] = useState(obj),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState(''),
       [popAnchorEl, setPopAnchorEl] = React.useState(null),
       [cubeKey, setCubeKey] = React.useState(uuid());
-
-   //setMsgArr(obj);
-   console.log(msgArr);
 
    const handleExpandClick = () => {
       setExpanded(!expanded);
@@ -94,8 +87,13 @@ export const Landing = () => {
 
    const helpClick = (event) => {
       setPopAnchorEl(event.currentTarget);
-      setMsgClass('displayNone');
    };
+
+   function spin() {
+      setCubeWrapperAnim(anims[num]);
+      setNum(num + 1 < 4 ? num + 1 : 0);
+      console.log(cubeWrapperAnim);
+   }
 
    function butClick(e) {
       let anim =
@@ -106,10 +104,9 @@ export const Landing = () => {
       console.log('cubeWrapperAnim = ' + cubeWrapperAnim);
 
       setSpinnerClass('displayBlock');
-      setAlertColor('success');
-      setMsgClass('displayBlock');
-      setMsg('Checking credentials...');
-      setMsgArr(msg[num]);
+      //setAlertColor('success');
+      //setMsg('Checking credentials...');
+      //setMsgArr(msgArr[num].msg);
       const user = {
          email: email,
          password: password
@@ -124,8 +121,8 @@ export const Landing = () => {
          password === ''
       ) {
          setSpinnerClass('displayNone');
-         setMsg('Please enter valid login credentials');
-         setAlertColor('error');
+         //setMsg('Please enter valid login credentials');
+         //setAlertColor('error');
       } else {
          localForage.setItem('token', false); // clear old token if exists
          login(user)
@@ -139,7 +136,7 @@ export const Landing = () => {
                } else {
                   console.log('+++ unhandled error here: ' + __filename);
                   setSpinnerClass('displayNone');
-                  setMsg('Login Failed');
+                  //       setMsg('Login Failed');
                }
             })
             .catch((err) => {
@@ -176,18 +173,16 @@ export const Landing = () => {
             <div className={spinnerClass}>
                <CircularProgress />
             </div>
-            <div className={'cubeWrapper ' + cubeWrapperAnim} id='stage'>
-               <CubeMsg
-                  msg1={msg}
-                  alertColor1={alertColor}
-                  msgClasses1={msgClasses}
-                  msg2={msg}
-                  alertColor2={alertColor}
-                  msgClasses2={msgClasses}
-                  key={cubeKey}
-                  width={'100%'}
-                  height={78}
-               />
+            <div className='contain '>
+               <div className={'cubeWrapper ' + cubeWrapperAnim} id='stage'>
+                  <CubeMsg
+                     msgArr={msgArr}
+                     key={cubeKey}
+                     width={'100%'}
+                     height={78}
+                     marginT={-60}
+                  />
+               </div>
             </div>
             <div style={{ padding: 10, display: 'block' }}></div>
             <a.div style={aprops}>
@@ -231,6 +226,13 @@ export const Landing = () => {
                               onClick={butClick}
                            >
                               Login
+                           </Button>
+                           <Button
+                              variant='contained'
+                              color='primary'
+                              onClick={spin}
+                           >
+                              spin
                            </Button>
                         </div>
                      </form>
