@@ -3,7 +3,7 @@ import { getUsers, removeUser, addUser } from './UserFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
 
-import { Msg } from '../widgets/Msg';
+import { Msg } from './widgets/Msg';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';

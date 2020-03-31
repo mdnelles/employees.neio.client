@@ -23,7 +23,7 @@ export const Three = () => {
    }, [squareWrapperAnim]);
 
    return (
-      <div style={{ padding: 100 }}>
+      <div style={{ padding: 100 }} id='stage'>
          <div className={squareWrapperAnim}>
             <Square />
          </div>

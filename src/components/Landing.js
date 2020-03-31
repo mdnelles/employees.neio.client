@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { login } from './UserFunctions';
 import { Msg } from './widgets/Msg';
 import localForage from 'localforage';
-import { CubitMsg } from './3d/CubitMsg';
+import { CubeMsg } from './3d/CubeMsg';
 import uuid from 'uuid';
 
 import { useSpring, animated as a } from 'react-spring';
@@ -25,6 +25,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -56,41 +57,36 @@ const useStyles = makeStyles((theme) => ({
    }
 }));
 
-const AtMdNelles = () => {
-   return (
-      <React.Fragment>
-         Author:{' '}
-         <a
-            href='https://github.com/mdnelles/employees.neio.client'
-            target='_blank'
-         >
-            @mdnelles
-         </a>
-      </React.Fragment>
-   );
-};
-
-const animYx90 = ['afwdY09', 'afwdY918', 'afwdY1827', 'afwdY2736'];
-
 function ListItemLink(props) {
    return <ListItem button component='a' {...props} />;
 }
 
 export const Landing = () => {
    const classes = useStyles();
+   let obj = [
+      { msg: '', alertColor: '', msgClass: '' },
+      { msg: '', alertColor: '', msgClass: '' },
+      { msg: '', alertColor: '', msgClass: '' },
+      { msg: '', alertColor: '', msgClass: '' }
+   ];
 
    const [email, setEmail] = useState('mxnelles@gmail.com'),
       [password, setPassword] = useState(''),
       [msg, setMsg] = useState('Enter valid credentials to proceed'),
       [alertColor, setAlertColor] = useState('info'),
-      [msgClass, setMsgClass] = useState('displayNone'),
+      [msgClass, setMsgClass] = useState('displayBlock'),
       [msgClasses, setMsgClasses] = useState([]),
       [spinnerClass, setSpinnerClass] = useState('displayNone'),
       [expanded, setExpanded] = React.useState(false),
       [arrYcount, setArrYcount] = useState(3),
-      [cubitAnim, setCubitAnim] = useState('noAnim'),
+      [num, setNum] = useState(0),
+      [msgArr, setMsgArr] = useState(obj),
+      [cubeWrapperAnim, setCubeWrapperAnim] = useState(''),
       [popAnchorEl, setPopAnchorEl] = React.useState(null),
-      [cubitKey, setCubitKey] = React.useState(uuid());
+      [cubeKey, setCubeKey] = React.useState(uuid());
+
+   //setMsgArr(obj);
+   console.log(msgArr);
 
    const handleExpandClick = () => {
       setExpanded(!expanded);
@@ -102,18 +98,18 @@ export const Landing = () => {
    };
 
    function butClick(e) {
-      let temp = arrYcount + 1;
-      temp > 3 ? setArrYcount(0) : setArrYcount(temp);
-      setCubitAnim(animYx90[arrYcount]);
-      setCubitKey(uuid());
-      console.log('cubitAnim = ' + cubitAnim);
-      e.preventDefault();
+      let anim =
+         cubeWrapperAnim === 'flipAnimFwd' ? 'flipAnimBack' : 'flipAnimFwd';
+      setCubeWrapperAnim(anim);
+      setCubeKey(uuid());
+      //console.log('cubeAnim = ' + cubeAnim);
+      console.log('cubeWrapperAnim = ' + cubeWrapperAnim);
+
       setSpinnerClass('displayBlock');
-      setAlertColor('info');
+      setAlertColor('success');
       setMsgClass('displayBlock');
       setMsg('Checking credentials...');
-      setMsgClasses([]);
-      setMsgClasses(['anim90x0']);
+      setMsgArr(msg[num]);
       const user = {
          email: email,
          password: password
@@ -128,8 +124,7 @@ export const Landing = () => {
          password === ''
       ) {
          setSpinnerClass('displayNone');
-         setMsg('Please ender valid login credentials');
-         setMsgClasses(['anim90x0']);
+         setMsg('Please enter valid login credentials');
          setAlertColor('error');
       } else {
          localForage.setItem('token', false); // clear old token if exists
@@ -145,7 +140,6 @@ export const Landing = () => {
                   console.log('+++ unhandled error here: ' + __filename);
                   setSpinnerClass('displayNone');
                   setMsg('Login Failed');
-                  setMsgClasses(['anim90x0']);
                }
             })
             .catch((err) => {
@@ -163,7 +157,7 @@ export const Landing = () => {
    const popId = popOpen ? 'simple-popover' : undefined;
    // end popover
 
-   useEffect(() => {}, [msgClasses, arrYcount]);
+   useEffect(() => {}, []);
 
    const aprops = useSpring({
       config: { duration: 700 },
@@ -179,24 +173,23 @@ export const Landing = () => {
    return (
       <div className='vertical-center center-outer'>
          <div className='center-inner'>
-            <Msg
-               msgClass={msgClass}
-               spinnerClass={spinnerClass}
-               msg={msg}
-               alertColor={alertColor}
-               msgClasses={msgClasses}
-            />
-            <div className={cubitAnim}>
-               <CubitMsg key={cubitKey} />
-               {/*<CubitMsg
-                  right='right'
-                  left='left'
-                  front='front'
-                  back='back'
-                  top='top'
-                  bottom='bottom'
-               />*/}
+            <div className={spinnerClass}>
+               <CircularProgress />
             </div>
+            <div className={'cubeWrapper ' + cubeWrapperAnim} id='stage'>
+               <CubeMsg
+                  msg1={msg}
+                  alertColor1={alertColor}
+                  msgClasses1={msgClasses}
+                  msg2={msg}
+                  alertColor2={alertColor}
+                  msgClasses2={msgClasses}
+                  key={cubeKey}
+                  width={'100%'}
+                  height={78}
+               />
+            </div>
+            <div style={{ padding: 10, display: 'block' }}></div>
             <a.div style={aprops}>
                <Card className={classes.root}>
                   <CardHeader
@@ -206,7 +199,7 @@ export const Landing = () => {
                         </Avatar>
                      }
                      title='Employees App '
-                     subheader=<AtMdNelles />
+                     subheader=''
                   />
                   <CardMedia
                      className={classes.media}

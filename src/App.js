@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import './App.css';
-import './App3d.css';
-import './App3dObjects.css';
-import './AppAnim.css';
 
 // AppWrapper protects Admin Panel from non sessioned access
 import { AppWrapper } from './AppWrapper';

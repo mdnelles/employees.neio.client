@@ -108,6 +108,7 @@ export const Users = () => {
       setOpen(false);
       addUser(newUser, token).then((res) => {
          getUsers(token).then((data) => {
+            console.log(data);
             setUsers(data);
          });
 
@@ -130,6 +131,7 @@ export const Users = () => {
          .then(function(theToken) {
             setToken(theToken);
             getUsers(theToken).then((data) => {
+               console.log(data);
                setUsers(data);
             });
          })
@@ -144,12 +146,13 @@ export const Users = () => {
    return (
       <div id='main' className='body'>
          <h3>Administrative Users</h3> <br />
+         {/*
          <Msg
             msgClass={msgClass}
             spinnerClass={spinnerClass}
             msg={msg}
             alertColor={alertColor}
-         />
+         /> */}
          <Button variant='contained' color='primary' onClick={handleClickOpen}>
             Add New User
          </Button>

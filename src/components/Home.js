@@ -1,5 +1,5 @@
 import React from 'react';
-import { HomeMenu } from '../widgets/HomeMenu';
+import { HomeMenu } from './widgets/HomeMenu';
 
 export const Home = () => {
    return (
