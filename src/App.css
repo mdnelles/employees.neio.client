@@ -599,6 +599,8 @@ body {
    transform: translateX(0px) translateY(0px) translateZ(38px);
    -moz-transform: translateX(0px) translateY(0px) translateZ(38px);
    -webkit-transform: translateX(0px) translateY(0px) translateZ(38px);
+
+   background-color: #fff;
 }
 #roll1 {
    transform: rotateX(90deg) translateX(0px) translateY(0px) translateZ(38px);
@@ -614,6 +616,8 @@ body {
       translateZ(38px);
    -webkit-transform: rotateX(180deg) translateX(0px) translateY(0px)
       translateZ(38px);
+
+   background-color: #fff;
 }
 #roll3 {
    transform: rotateX(-90deg) translateX(0px) translateY(0px) translateZ(38px);
@@ -621,6 +625,8 @@ body {
       translateZ(38px);
    -webkit-transform: rotateX(-90deg) translateX(0px) translateY(0px)
       translateZ(38px);
+
+   background-color: #fff;
 }
 /* end cube */
 /* /////// End k3d objects ////// */

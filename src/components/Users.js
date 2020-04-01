@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getUsers, removeUser, addUser } from './UserFunctions';
+import { getUsers, removeUser, addUser, editUser } from './UserFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
 
@@ -16,21 +16,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 
 import MaterialTable from 'material-table';
-/*
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-*/
-
-const useStyles = makeStyles({
-   table: {
-      minWidth: 650
-   }
-});
 
 export const Users = () => {
    const [open, setOpen] = useState(false),
@@ -39,58 +24,12 @@ export const Users = () => {
       [email, setEmail] = useState(''),
       [password, setPassword] = useState(''),
       [firstName, setFirstName] = useState(''),
+      [reset, setReset] = useState(false),
       [lastName, setLastName] = useState(''),
       [msgArr, setMsgArr] = useState(obj),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
    const [state, setState] = useState({ columns: [], data: [] });
-
-   const editUserStart = (theUuid) => {
-      //setSpinnerClass('displayNone');
-      setMsgArr(
-         cubeMsgNext(
-            'Edit Feature has been disabled for this app',
-            'error',
-            msgArr
-         )
-      );
-      // find number of next up slide and then update state of Cube Wrapper to trigger roll
-      setCubeWrapperAnim(
-         msgArr[msgArr.findIndex((el) => el.current === true)].anim
-      );
-   };
-
-   const removeUserStart = (theUuid) => {
-      if (window.confirm('Are you sure you want to delete this?')) {
-         if (theUuid !== undefined) {
-            removeUser(theUuid, token)
-               .then(() => {
-                  //setSpinnerClass('displayNone');
-                  setMsgArr(
-                     cubeMsgNext(
-                        'User removed from database',
-                        'Success',
-                        msgArr
-                     )
-                  );
-                  setCubeWrapperAnim(
-                     msgArr[msgArr.findIndex((el) => el.current === true)].anim
-                  );
-                  setUsers(users.filter((user) => user.uuid !== theUuid));
-               })
-               .catch((err) => {
-                  console.log('Err: could not remove user ' + err);
-                  //setSpinnerClass('displayNone');
-                  setMsgArr(cubeMsgNext('Error: ' + err, 'error', msgArr));
-                  setCubeWrapperAnim(
-                     msgArr[msgArr.findIndex((el) => el.current === true)].anim
-                  );
-               });
-         }
-      } else {
-         return false;
-      }
-   };
 
    const handleClickOpen = () => {
       setOpen(true);
@@ -131,10 +70,9 @@ export const Users = () => {
          getUsers(token).then((data) => {
             console.log(data);
             setUsers(data);
+            setReset(!reset);
          });
 
-         //commenting this out (below) rather than update the state going back to the DB for id / last login
-         //setUsers([...users, newUser]);
          setEmail(''); // clear values
          setPassword('');
          setFirstName('');
@@ -150,8 +88,15 @@ export const Users = () => {
       });
    };
 
+   // this is to remove the ADD button because in some cases we don't want to add a value
+   const removeAdd = () => {
+      var node = document.querySelector('[title="Add"]');
+      if (typeof node && node !== null && node !== undefined) {
+         node.remove();
+      }
+   };
+
    useEffect(() => {
-      console.log('--- here 00 -- ');
       setMsgArr(cubeMsgNext('Loading Users', 'info', msgArr));
       setCubeWrapperAnim(
          msgArr[msgArr.findIndex((el) => el.current === true)].anim
@@ -166,11 +111,12 @@ export const Users = () => {
                   msgArr[msgArr.findIndex((el) => el.current === true)].anim
                );
                setUsers(data);
-               console.log(data);
+               setTimeout(() => {
+                  removeAdd();
+               }, 2000);
 
                setState({
                   columns: [
-                     { title: 'ID', field: 'id', type: 'numeric' },
                      { title: 'Email', field: 'email' },
                      { title: 'First Name', field: 'first_name' },
                      { title: 'Last Name', field: 'last_name' },
@@ -178,8 +124,6 @@ export const Users = () => {
                   ],
                   data: data
                });
-
-               console.log('---here 1--');
             });
          })
 
@@ -188,13 +132,13 @@ export const Users = () => {
             alert('no token found');
             window.location.href = '/';
          });
-   }, []);
+   }, [reset]);
 
    return (
       <div id='main' className='body'>
          <h3>Administrative Users</h3>
-         <div style={{ padding: 30, display: 'block' }}></div>
-         <div className='contain '>
+         <div style={{ padding: 25, display: 'block' }}></div>
+         <div className='contain' style={{ marginLeft: 10 }}>
             <div className={'cubeWrapperFluid ' + cubeWrapperAnim} id='stage'>
                <CubeMsg
                   msgArr={msgArr}
@@ -286,63 +230,54 @@ export const Users = () => {
                         setState((prevState) => {
                            const data = [...prevState.data];
                            data.push(newData);
-                           console.log(newData);
-                           setMsgArr(
-                              cubeMsgNext('New Entry Added', 'success', msgArr)
-                           );
-
-                           setCubeWrapperAnim(
-                              msgArr[
-                                 msgArr.findIndex((el) => el.current === true)
-                              ].anim
-                           );
                            return { ...prevState, data };
                         });
                      }, 600);
                   }),
                onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
-                     setTimeout(() => {
+                     //setTimeout(() => {
+                     editUser(newData, token).then((res) => {
                         resolve();
+                        setMsgArr(
+                           cubeMsgNext(
+                              'New entry added to database',
+                              'success',
+                              msgArr
+                           )
+                        );
+                        // find number of next up slide and then update state of Cube Wrapper to trigger roll
+                        setCubeWrapperAnim(
+                           msgArr[msgArr.findIndex((el) => el.current === true)]
+                              .anim
+                        );
                         if (oldData) {
                            setState((prevState) => {
                               const data = [...prevState.data];
                               data[data.indexOf(oldData)] = newData;
-                              setMsgArr(
-                                 cubeMsgNext('Row Updated', 'success', msgArr)
-                              );
-                              setCubeWrapperAnim(
-                                 msgArr[
-                                    msgArr.findIndex(
-                                       (el) => el.current === true
-                                    )
-                                 ].anim
-                              );
-
                               return { ...prevState, data };
                            });
                         }
-                     }, 600);
+                     });
                   }),
                onRowDelete: (oldData) =>
                   new Promise((resolve) => {
-                     setTimeout(() => {
+                     //setTimeout(() => {
+                     removeUser(oldData.id, token).then(() => {
+                        setMsgArr(
+                           cubeMsgNext('Removed user', 'Success', msgArr)
+                        );
+                        setCubeWrapperAnim(
+                           msgArr[msgArr.findIndex((el) => el.current === true)]
+                              .anim
+                        );
                         resolve();
                         setState((prevState) => {
                            const data = [...prevState.data];
                            data.splice(data.indexOf(oldData), 1);
-                           setMsgArr(
-                              cubeMsgNext('Row Deleted', 'success', msgArr)
-                           );
-
-                           setCubeWrapperAnim(
-                              msgArr[
-                                 msgArr.findIndex((el) => el.current === true)
-                              ].anim
-                           );
                            return { ...prevState, data };
                         });
-                     }, 600);
+                     });
                   })
             }}
          />

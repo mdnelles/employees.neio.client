@@ -27,11 +27,31 @@ export const addUser = (newUser, theToken) => {
          return '++Error Loc 10';
       });
 };
+export const editUser = (editUser, theToken) => {
+   return axios
+      .post(serverPath + '/user/edit', {
+         id: editUser.id,
+         first_name: editUser.first_name,
+         last_name: editUser.last_name,
+         email: editUser.email,
+         password: editUser.password,
+         token: theToken,
+         caller: 'UserFunctions.editUser'
+      })
+      .then((res) => {
+         console.log('UserFunctions.editUser');
+         return res;
+      })
+      .catch((err) => {
+         console.log('ClientSide Error @ UserFunctions.editUser ' + err);
+         return '++Error Loc 10';
+      });
+};
 
-export const removeUser = (theUuid, token) => {
+export const removeUser = (id, token) => {
    return axios
       .post(serverPath + '/user/remove_user', {
-         theUuid,
+         id,
          token,
          caller: 'UserFunctions.register'
       })

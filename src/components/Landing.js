@@ -149,7 +149,6 @@ export const Landing = () => {
                      msgArr
                   )
                );
-
                setCubeWrapperAnim(
                   msgArr[msgArr.findIndex((el) => el.current === true)].anim
                );

@@ -15,14 +15,14 @@ export const CubeMsg = (props) => {
          <CubeSide id='roll0' width={props.width}>
             <Msg
                msg={props.msgArr[0].msg}
-               alertColor={props.msgArr[0].alertColor}
+               alertColor={props.msgArr[0].alertColor.toLowerCase()}
                width={props.width}
             />
          </CubeSide>
          <CubeSide id='roll1' width={props.width}>
             <Msg
                msg={props.msgArr[1].msg}
-               alertColor={props.msgArr[1].alertColor}
+               alertColor={props.msgArr[1].alertColor.toLowerCase()}
                width={props.width}
             />
          </CubeSide>
@@ -30,14 +30,14 @@ export const CubeMsg = (props) => {
          <CubeSide id='roll2' width={props.width}>
             <Msg
                msg={props.msgArr[2].msg}
-               alertColor={props.msgArr[2].alertColor}
+               alertColor={props.msgArr[2].alertColor.toLowerCase()}
                width={props.width}
             />
          </CubeSide>
          <CubeSide id='roll3' width={props.width}>
             <Msg
                msg={props.msgArr[3].msg}
-               alertColor={props.msgArr[3].alertColor}
+               alertColor={props.msgArr[3].alertColor.toLowerCase()}
                width={props.width}
             />
          </CubeSide>
