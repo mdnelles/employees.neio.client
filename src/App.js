@@ -6,7 +6,6 @@ import './App.css';
 // AppWrapper protects Admin Panel from non sessioned access
 import { AppWrapper } from './AppWrapper';
 import { Landing } from './components/Landing';
-import { Three } from './components/Three';
 
 class App extends Component {
    render() {
@@ -22,7 +21,6 @@ class App extends Component {
                <Switch>
                   <Route exact path='/' component={LoginContainer} />
                   <Route path='/' component={AppWrapper} />
-                  <Route path='/three' component={Three} />
                </Switch>
             </Router>
          </div>

@@ -43,9 +43,7 @@ export const Users = () => {
       [msgArr, setMsgArr] = useState(obj),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
-   const [state, setState] = useState();
-
-   const classes = useStyles();
+   const [state, setState] = useState({ columns: [], data: [] });
 
    const editUserStart = (theUuid) => {
       //setSpinnerClass('displayNone');
@@ -153,7 +151,8 @@ export const Users = () => {
    };
 
    useEffect(() => {
-      setMsgArr(cubeMsgNext('Loading Users', 'Info', msgArr));
+      console.log('--- here 00 -- ');
+      setMsgArr(cubeMsgNext('Loading Users', 'info', msgArr));
       setCubeWrapperAnim(
          msgArr[msgArr.findIndex((el) => el.current === true)].anim
       );
@@ -167,6 +166,8 @@ export const Users = () => {
                   msgArr[msgArr.findIndex((el) => el.current === true)].anim
                );
                setUsers(data);
+               console.log(data);
+
                setState({
                   columns: [
                      { title: 'ID', field: 'id', type: 'numeric' },
@@ -177,8 +178,11 @@ export const Users = () => {
                   ],
                   data: data
                });
+
+               console.log('---here 1--');
             });
          })
+
          .catch(function(err) {
             console.log(err);
             alert('no token found');
@@ -269,92 +273,79 @@ export const Users = () => {
          </Dialog>
          <br />
          <br />
-         {/*}
-         <MaterialTable
-      title="Editable Example"
-      columns={state.columns}
-      data={state.data}
-      editable={{
-        onRowAdd: (newData) =>
-          new Promise((resolve) => {
-            setTimeout(() => {
-              resolve();
-              setState((prevState) => {
-                const data = [...prevState.data];
-                data.push(newData);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise((resolve) => {
-            setTimeout(() => {
-              resolve();
-              if (oldData) {
-                setState((prevState) => {
-                  const data = [...prevState.data];
-                  data[data.indexOf(oldData)] = newData;
-                  return { ...prevState, data };
-                });
-              }
-            }, 600);
-          }),
-        onRowDelete: (oldData) =>
-          new Promise((resolve) => {
-            setTimeout(() => {
-              resolve();
-              setState((prevState) => {
-                const data = [...prevState.data];
-                data.splice(data.indexOf(oldData), 1);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }),
-      }}
-    />
 
-    */}
-         {/* 
-         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label='simple table'>
-               <TableHead>
-                  <TableRow>
-                     <TableCell>ID</TableCell>
-                     <TableCell align='left'>Email</TableCell>
-                     <TableCell align='left'>First Name</TableCell>
-                     <TableCell align='left'>Last Name</TableCell>
-                     <TableCell align='left'>Last Login</TableCell>
-                     <TableCell align='left'></TableCell>
-                  </TableRow>
-               </TableHead>
-               <TableBody>
-                  {users.map((user) => (
-                     <TableRow key={user.uuid}>
-                        <TableCell component='th' scope='row'>
-                           {user.id}
-                        </TableCell>
-                        <TableCell align='left'>{user.email}</TableCell>
-                        <TableCell align='left'>{user.first_name}</TableCell>
-                        <TableCell align='left'>{user.last_name}</TableCell>
-                        <TableCell align='left'>
-                           {user.last_login !== undefined
-                              ? user.last_login.toString().replace('.000Z', '')
-                              : ''}
-                        </TableCell>
-                        <TableCell align='left'>
-                           <Button onClick={() => editUserStart(user.uuid)}>
-                              Edit
-                           </Button>
-                           <Button onClick={() => removeUserStart(user.uuid)}>
-                              Delete
-                           </Button>
-                        </TableCell>
-                     </TableRow>
-                  ))}
-               </TableBody>
-            </Table>
-         </TableContainer>
-         */}
+         <MaterialTable
+            title='Editable Example'
+            columns={state.columns}
+            data={state.data}
+            editable={{
+               onRowAdd: (newData) =>
+                  new Promise((resolve) => {
+                     setTimeout(() => {
+                        resolve();
+                        setState((prevState) => {
+                           const data = [...prevState.data];
+                           data.push(newData);
+                           console.log(newData);
+                           setMsgArr(
+                              cubeMsgNext('New Entry Added', 'success', msgArr)
+                           );
+
+                           setCubeWrapperAnim(
+                              msgArr[
+                                 msgArr.findIndex((el) => el.current === true)
+                              ].anim
+                           );
+                           return { ...prevState, data };
+                        });
+                     }, 600);
+                  }),
+               onRowUpdate: (newData, oldData) =>
+                  new Promise((resolve) => {
+                     setTimeout(() => {
+                        resolve();
+                        if (oldData) {
+                           setState((prevState) => {
+                              const data = [...prevState.data];
+                              data[data.indexOf(oldData)] = newData;
+                              setMsgArr(
+                                 cubeMsgNext('Row Updated', 'success', msgArr)
+                              );
+                              setCubeWrapperAnim(
+                                 msgArr[
+                                    msgArr.findIndex(
+                                       (el) => el.current === true
+                                    )
+                                 ].anim
+                              );
+
+                              return { ...prevState, data };
+                           });
+                        }
+                     }, 600);
+                  }),
+               onRowDelete: (oldData) =>
+                  new Promise((resolve) => {
+                     setTimeout(() => {
+                        resolve();
+                        setState((prevState) => {
+                           const data = [...prevState.data];
+                           data.splice(data.indexOf(oldData), 1);
+                           setMsgArr(
+                              cubeMsgNext('Row Deleted', 'success', msgArr)
+                           );
+
+                           setCubeWrapperAnim(
+                              msgArr[
+                                 msgArr.findIndex((el) => el.current === true)
+                              ].anim
+                           );
+                           return { ...prevState, data };
+                        });
+                     }, 600);
+                  })
+            }}
+         />
       </div>
    );
 };

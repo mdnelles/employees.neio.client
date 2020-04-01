@@ -19,7 +19,6 @@ import { Titles } from './components/Titles';
 import { Salaries } from './components/Salaries';
 import { Statistics } from './components/Statistics';
 import { Settings } from './components/Settings';
-import { Three } from './components/Three';
 
 export const AppWrapper = () => {
    const [activeSession, setActiveSession] = useState('loading'),
@@ -82,8 +81,6 @@ export const AppWrapper = () => {
                <Route exact path='/salaries' component={Salaries} />
                <Route exact path='/stats' component={Statistics} />
                <Route exact path='/settings' component={Settings} />
-
-               <Route path='/three' component={Three} />
             </div>
          </div>
       );

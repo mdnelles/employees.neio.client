@@ -3,7 +3,6 @@ import { login } from './UserFunctions';
 import localForage from 'localforage';
 import { CubeMsg } from './3d/CubeMsg';
 import { cubeMsgNext, obj } from './_sharedFunctions';
-import uuid from 'uuid';
 
 import { useSpring, animated as a } from 'react-spring';
 
@@ -176,7 +175,7 @@ export const Landing = () => {
       setCubeWrapperAnim(
          msgArr[msgArr.findIndex((el) => el.current === true)].anim
       );
-   }, []);
+   }, [msgArr]);
 
    const aprops = useSpring({
       config: { duration: 700 },

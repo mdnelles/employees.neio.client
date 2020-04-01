@@ -101,10 +101,10 @@ export const LogView = () => {
    const [code, setCode] = useState(500);
    const [perPage, setPerPage] = useState(5);
    const [thetoken, setThetoken] = useState('NA');
-   const [msgClass, setMsgClass] = useState('displayBlock');
-   const [spinnerClass, setSpinnerClass] = useState('displayBlock');
-   const [msg, setMsg] = useState('');
-   const [alertColor, setAlertColor] = useState('info');
+   //const [msgClass, //setMsgClass] = useState('displayBlock');
+   //const [spinnerClass, //setSpinnerClass] = useState('displayBlock');
+   //const [msg, //setMsg] = useState('');
+   //const [alertColor, //setAlertColor] = useState('info');
    const [pageCount, setPageCount] = useState(1);
    const [logsCount, setLogsCount] = useState(0);
    const [page, setPage] = useState(1);
@@ -112,31 +112,33 @@ export const LogView = () => {
    // triggered by drop down wich selects how many records to display per page.
    const perPageHandler = (e) => {
       setPage(1);
-      setAlertColor('info');
-      setMsgClass('displayBlock');
-      setSpinnerClass('displayBlock');
-      setMsg('Getting logs from Database');
+      /*
+      //setAlertColor('info');
+      //setMsgClass('displayBlock');
+      //setSpinnerClass('displayBlock');
+      //setMsg('Getting logs from Database');      */
       setPerPage(parseInt(parseInt(e.target.value)));
       console.log(e.target.value);
+
       getLogsCount(thetoken, code).then((theLogsCount) => {
          // calculate the number of pages  total logs / entries per page
          setLogsCount(theLogsCount);
          calcPageNum(theLogsCount, e.target.value);
          getLogs(thetoken, code, e.target.value).then((data) => {
             setLogs(data);
-            setAlertColor('success');
-            setSpinnerClass('displayNone');
-            setMsg('Logs Loaded.  Please continue.');
+            //setAlertColor('success');
+            //setSpinnerClass('displayNone');
+            //setMsg('Logs Loaded.  Please continue.');
          });
       });
    };
    // event driven by dropdown which chooses what filetype to display
    const typeChange = (e) => {
       setPage(1);
-      setAlertColor('info');
-      setMsgClass('displayBlock');
-      setSpinnerClass('displayBlock');
-      setMsg('Getting logs from Database');
+      //setAlertColor('info');
+      //setMsgClass('displayBlock');
+      //setSpinnerClass('displayBlock');
+      //setMsg('Getting logs from Database');
       console.log(e.target.value);
       setCode(parseInt(e.target.value));
       getLogsCount(thetoken, e.target.value).then((theLogsCount) => {
@@ -144,9 +146,9 @@ export const LogView = () => {
          getLogs(thetoken, e.target.value, perPage, page).then((data) => {
             setLogs(data);
             calcPageNum(theLogsCount, perPage);
-            setAlertColor('success');
-            setSpinnerClass('displayNone');
-            setMsg('Logs Loaded.  Please continue.');
+            //setAlertColor('success');
+            //setSpinnerClass('displayNone');
+            //setMsg('Logs Loaded.  Please continue.');
          });
       });
    };
@@ -185,19 +187,19 @@ export const LogView = () => {
 
       if (newPage >= 1 && newPage <= pageCount && newPage !== page) {
          setPage(newPage);
-         setMsgClass('displayBlock');
-         setAlertColor('info');
-         setSpinnerClass('displayBlock');
-         setMsg('Getting logs from Database');
+         //setMsgClass('displayBlock');
+         //setAlertColor('info');
+         //setSpinnerClass('displayBlock');
+         //setMsg('Getting logs from Database');
          getLogsCount(thetoken, code).then((theLogsCount) => {
             setLogsCount(theLogsCount);
             calcPageNum(theLogsCount, perPage);
 
             getLogs(thetoken, code, perPage, newPage).then((data) => {
                setLogs(data);
-               setAlertColor('success');
-               setSpinnerClass('displayNone');
-               setMsg('Logs Loaded.  Please continue.');
+               //setAlertColor('success');
+               //setSpinnerClass('displayNone');
+               //setMsg('Logs Loaded.  Please continue.');
             });
          });
       }
@@ -205,10 +207,10 @@ export const LogView = () => {
 
    useEffect(() => {
       if (thetoken === 'NA') {
-         setMsgClass('displayBlock');
-         setAlertColor('info');
-         setSpinnerClass('displayBlock');
-         setMsg('Getting logs from Database');
+         //setMsgClass('displayBlock');
+         //setAlertColor('info');
+         //setSpinnerClass('displayBlock');
+         //setMsg('Getting logs from Database');
          localForage
             .getItem('token')
             .then(function(startToken) {
@@ -219,9 +221,9 @@ export const LogView = () => {
 
                   getLogs(startToken, code, perPage, page).then((data) => {
                      setLogs(data);
-                     setAlertColor('success');
-                     setSpinnerClass('displayNone');
-                     setMsg('Logs Loaded.  Please continue.');
+                     //setAlertColor('success');
+                     //setSpinnerClass('displayNone');
+                     //setMsg('Logs Loaded.  Please continue.');
                   });
                });
             })
@@ -239,12 +241,13 @@ export const LogView = () => {
    return (
       <div id='main' className='body'>
          <h3>Logs</h3> <br />
-         <Msg
+         {/*         <Msg
             msgClass={msgClass}
             spinnerClass={spinnerClass}
             msg={msg}
             alertColor={alertColor}
          />
+*/}
          <div style={{ backgroundColor: '#999', padding: 2 }}>
             <Grid container spacing={0}>
                <Grid item xs={6} sm={2}>
