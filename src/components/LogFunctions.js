@@ -6,13 +6,10 @@ var serverPath = global.config.routerPath;
 if (thisServer.includes('3000')) serverPath = global.config.devPath;
 
 ////// playlists
-export const getLogs = async (theToken, code, perPage, page) => {
+export const getLogs = async (theToken) => {
    try {
       const res = await axios.post(serverPath + '/logs/get_logs', {
          token: theToken,
-         code,
-         perPage,
-         page,
          caller: 'logFunctions.getLogs'
       });
       return res.data;

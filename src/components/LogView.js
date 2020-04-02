@@ -2,17 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { getLogs, getLogsCount } from './LogFunctions';
 import localForage from 'localforage';
 
-import { Msg } from './widgets/Msg';
-import { makeStyles } from '@material-ui/core/styles';
+import { cubeMsgNext, obj } from './_sharedFunctions';
+import { CubeMsg } from './3d/CubeMsg';
+
 import Grid from '@material-ui/core/Grid';
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Pagination from '@material-ui/lab/Pagination';
-import Select from '@material-ui/core/Select';
-//import Button from '@material-ui/core/Button';
-//import ButtonGroup from '@material-ui/core/ButtonGroup';
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
+import { lighten, makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
 const rowStyle = {
    padding: 0,
@@ -28,276 +44,429 @@ const GreenCheckIcon = () => {
    return <CheckCircleIcon size='sm' style={{ fill: 'green', fontSize: 15 }} />;
 };
 
-const LogRow = (props) => {
+function createData(id, code, filename, msg_programmer, msg_app, refer, tdate) {
+   return { id, code, filename, msg_programmer, msg_app, refer, tdate };
+}
+
+function descendingComparator(a, b, orderBy) {
+   if (b[orderBy] < a[orderBy]) {
+      return -1;
+   }
+   if (b[orderBy] > a[orderBy]) {
+      return 1;
+   }
+   return 0;
+}
+
+function getComparator(order, orderBy) {
+   return order === 'desc'
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
+   const stabilizedThis = array.map((el, index) => [el, index]);
+   stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+   });
+   return stabilizedThis.map((el) => el[0]);
+}
+
+const headCells = [
+   { id: 'id', numeric: true, disablePadding: true, label: 'ID' },
+   { id: 'code', numeric: true, disablePadding: true, label: 'Code' },
+   {
+      id: 'filename',
+      numeric: false,
+      disablePadding: false,
+      label: 'Filename'
+   },
+   {
+      id: 'msg_programmer',
+      numeric: false,
+      disablePadding: false,
+      label: 'Msg'
+   },
+   { id: 'msg_app', numeric: false, disablePadding: false, label: 'Msg(a)' },
+   { id: 'refer', numeric: false, disablePadding: false, label: 'Refer' },
+   { id: 'tdate', numeric: false, disablePadding: false, label: 'Date' }
+];
+
+/* -- */
+
+function EnhancedTableHead(props) {
+   const {
+      classes,
+      onSelectAllClick,
+      order,
+      orderBy,
+      numSelected,
+      rowCount,
+      onRequestSort
+   } = props;
+   const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+   };
+
    return (
-      <div style={rowStyle}>
-         <Grid container spacing={2} className={'rowdata ' + props.bgc}>
-            <Grid item xs={2} sm={2}>
-               {props.code === '200' ? <GreenCheckIcon /> : <RedErrorIcon />}{' '}
-               <Space />
-               {props.filename}
-            </Grid>
-            <Grid item xs={2} sm={2}>
-               {props.id} - {props.fnction}
-            </Grid>
-            <Grid item xs={2} sm={2}>
-               {props.msg_programmer}
-            </Grid>
-            <Grid item xs={2} sm={4}>
-               {props.msg_app},{props.refer}
-            </Grid>
-            <Grid item xs={2} sm={2}>
-               {props.tdate}
-            </Grid>
-         </Grid>
-      </div>
+      <TableHead>
+         <TableRow>
+            <TableCell padding='checkbox'>
+               <Checkbox
+                  indeterminate={numSelected > 0 && numSelected < rowCount}
+                  checked={rowCount > 0 && numSelected === rowCount}
+                  onChange={onSelectAllClick}
+                  inputProps={{ 'aria-label': 'select all desserts' }}
+               />
+            </TableCell>
+            {headCells.map((headCell) => (
+               <TableCell
+                  key={headCell.id}
+                  align={headCell.numeric ? 'right' : 'left'}
+                  padding={headCell.disablePadding ? 'none' : 'default'}
+                  sortDirection={orderBy === headCell.id ? order : false}
+               >
+                  <TableSortLabel
+                     active={orderBy === headCell.id}
+                     direction={orderBy === headCell.id ? order : 'asc'}
+                     onClick={createSortHandler(headCell.id)}
+                  >
+                     {headCell.label}
+                     {orderBy === headCell.id ? (
+                        <span className={classes.visuallyHidden}>
+                           {order === 'desc'
+                              ? 'sorted descending'
+                              : 'sorted ascending'}
+                        </span>
+                     ) : null}
+                  </TableSortLabel>
+               </TableCell>
+            ))}
+         </TableRow>
+      </TableHead>
+   );
+}
+
+EnhancedTableHead.propTypes = {
+   classes: PropTypes.object.isRequired,
+   numSelected: PropTypes.number.isRequired,
+   onRequestSort: PropTypes.func.isRequired,
+   onSelectAllClick: PropTypes.func.isRequired,
+   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+   orderBy: PropTypes.string.isRequired,
+   rowCount: PropTypes.number.isRequired
+};
+
+const useToolbarStyles = makeStyles((theme) => ({
+   root: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(1)
+   },
+   highlight:
+      theme.palette.type === 'light'
+         ? {
+              color: theme.palette.secondary.main,
+              backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+           }
+         : {
+              color: theme.palette.text.primary,
+              backgroundColor: theme.palette.secondary.dark
+           },
+   title: {
+      flex: '1 1 100%'
+   }
+}));
+
+const EnhancedTableToolbar = (props) => {
+   const classes = useToolbarStyles();
+   const { numSelected } = props;
+
+   return (
+      <Toolbar
+         className={clsx(classes.root, {
+            [classes.highlight]: numSelected > 0
+         })}
+      >
+         {numSelected > 0 ? (
+            <Typography
+               className={classes.title}
+               color='inherit'
+               variant='subtitle1'
+               component='div'
+            >
+               {numSelected} selected
+            </Typography>
+         ) : (
+            <Typography
+               className={classes.title}
+               variant='h6'
+               id='tableTitle'
+               component='div'
+            >
+               Logs
+            </Typography>
+         )}
+
+         {numSelected > 0 ? (
+            <Tooltip title='Delete'>
+               <IconButton
+                  aria-label='delete'
+                  onClick={() => props.deleteHandler()}
+               >
+                  <DeleteIcon />
+               </IconButton>
+            </Tooltip>
+         ) : (
+            <Tooltip title='Filter list'>
+               <IconButton aria-label='filter list'>
+                  <FilterListIcon />
+               </IconButton>
+            </Tooltip>
+         )}
+      </Toolbar>
    );
 };
 
-const Alllogs = (props) => {
-   var tog = false,
-      bgc;
-
-   if (props.logs !== undefined && Array.isArray(props.logs)) {
-      props.logs.forEach((e, i) => {
-         tog === false ? (bgc = 'darkbg') : (bgc = 'graybg');
-         tog = !tog;
-         props.logs[i].bgc = bgc;
-      });
-   }
-
-   return (
-      <div>
-         {props.logs.map((log) => (
-            <LogRow
-               key={log.id}
-               id={log.id}
-               bgc={log.bgc}
-               filename={log.filename}
-               fnction={log.fnction}
-               msg_programmer={log.msg_programmer}
-               msg_app={log.msg}
-               code={log.code}
-               ip={log.ip}
-               refer={log.refer}
-               tdate={log.tdate}
-            />
-         ))}
-      </div>
-   );
+EnhancedTableToolbar.propTypes = {
+   numSelected: PropTypes.number.isRequired
 };
 
 const useStyles = makeStyles((theme) => ({
    root: {
-      '& > *': {
-         marginTop: theme.spacing(2)
-      }
+      width: '100%'
+   },
+   paper: {
+      width: '100%',
+      marginBottom: theme.spacing(2)
+   },
+   table: {
+      minWidth: 750
+   },
+   visuallyHidden: {
+      border: 0,
+      clip: 'rect(0 0 0 0)',
+      height: 1,
+      margin: -1,
+      overflow: 'hidden',
+      padding: 0,
+      position: 'absolute',
+      top: 20,
+      width: 1
    }
 }));
 
 export const LogView = () => {
-   //const [token, setToken] = useState('no token');
-   const [logs, setLogs] = useState([]);
-   const [code, setCode] = useState(500);
-   const [perPage, setPerPage] = useState(5);
-   const [thetoken, setThetoken] = useState('NA');
-   //const [msgClass, //setMsgClass] = useState('displayBlock');
-   //const [spinnerClass, //setSpinnerClass] = useState('displayBlock');
-   //const [msg, //setMsg] = useState('');
-   //const [alertColor, //setAlertColor] = useState('info');
-   const [pageCount, setPageCount] = useState(1);
-   const [logsCount, setLogsCount] = useState(0);
-   const [page, setPage] = useState(1);
+   const classes = useStyles();
 
-   // triggered by drop down wich selects how many records to display per page.
-   const perPageHandler = (e) => {
-      setPage(1);
-      /*
-      //setAlertColor('info');
-      //setMsgClass('displayBlock');
-      //setSpinnerClass('displayBlock');
-      //setMsg('Getting logs from Database');      */
-      setPerPage(parseInt(parseInt(e.target.value)));
-      console.log(e.target.value);
-
-      getLogsCount(thetoken, code).then((theLogsCount) => {
-         // calculate the number of pages  total logs / entries per page
-         setLogsCount(theLogsCount);
-         calcPageNum(theLogsCount, e.target.value);
-         getLogs(thetoken, code, e.target.value).then((data) => {
-            setLogs(data);
-            //setAlertColor('success');
-            //setSpinnerClass('displayNone');
-            //setMsg('Logs Loaded.  Please continue.');
-         });
-      });
-   };
-   // event driven by dropdown which chooses what filetype to display
-   const typeChange = (e) => {
-      setPage(1);
-      //setAlertColor('info');
-      //setMsgClass('displayBlock');
-      //setSpinnerClass('displayBlock');
-      //setMsg('Getting logs from Database');
-      console.log(e.target.value);
-      setCode(parseInt(e.target.value));
-      getLogsCount(thetoken, e.target.value).then((theLogsCount) => {
-         setLogsCount(theLogsCount);
-         getLogs(thetoken, e.target.value, perPage, page).then((data) => {
-            setLogs(data);
-            calcPageNum(theLogsCount, perPage);
-            //setAlertColor('success');
-            //setSpinnerClass('displayNone');
-            //setMsg('Logs Loaded.  Please continue.');
-         });
-      });
-   };
-
-   const calcPageNum = (theLogsCount, thePerPage) => {
-      let n = parseInt(theLogsCount / thePerPage) + 1;
-      // check to see if there is not a remainder don't need extra page
-      if (parseInt(theLogsCount / thePerPage) === theLogsCount / thePerPage)
-         n = parseInt(theLogsCount / thePerPage);
-      setPageCount(n);
-   };
-
-   const pageChange = (event) => {
-      // important note: the prev next buttons are intelligently disababled when appropriate
-      // when this happens they are a different kind of object the following code takes that in to account
-      // of further note: clicking on the button or the embeded <svg> element can trigger different event.target results
-      var newPage = page;
-      var t = event.target.textContent;
-      if (t !== undefined && t !== '') {
-         newPage = parseInt(t);
-      } else {
-         // non-numeric scenario
-
-         if (event.target.outerHTML.toString().includes('M15')) {
-            // svg source is M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z
-            // previous provision
-            newPage = page - 1;
-         } else if (event.target.outerHTML.toString().includes('M10')) {
-            // svg source is M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z
-            // next page provision
-            newPage = page + 1;
-         } else {
-            console.log('button disabled');
-         }
-      }
-
-      if (newPage >= 1 && newPage <= pageCount && newPage !== page) {
-         setPage(newPage);
-         //setMsgClass('displayBlock');
-         //setAlertColor('info');
-         //setSpinnerClass('displayBlock');
-         //setMsg('Getting logs from Database');
-         getLogsCount(thetoken, code).then((theLogsCount) => {
-            setLogsCount(theLogsCount);
-            calcPageNum(theLogsCount, perPage);
-
-            getLogs(thetoken, code, perPage, newPage).then((data) => {
-               setLogs(data);
-               //setAlertColor('success');
-               //setSpinnerClass('displayNone');
-               //setMsg('Logs Loaded.  Please continue.');
-            });
-         });
-      }
-   };
+   const [rows, setRows] = useState([]),
+      [thetoken, setThetoken] = useState('NA'),
+      [order, setOrder] = React.useState('asc'),
+      [orderBy, setOrderBy] = React.useState('tdate'),
+      [selected, setSelected] = React.useState([]),
+      [page, setPage] = React.useState(0),
+      [dense, setDense] = React.useState(false),
+      [rowsPerPage, setRowsPerPage] = React.useState(5),
+      [msgArr, setMsgArr] = useState(obj),
+      [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
    useEffect(() => {
-      if (thetoken === 'NA') {
-         //setMsgClass('displayBlock');
-         //setAlertColor('info');
-         //setSpinnerClass('displayBlock');
-         //setMsg('Getting logs from Database');
-         localForage
-            .getItem('token')
-            .then(function(startToken) {
-               setThetoken(startToken);
-               getLogsCount(startToken, code).then((theLogsCount) => {
-                  setLogsCount(theLogsCount);
-                  calcPageNum(theLogsCount, perPage);
-
-                  getLogs(startToken, code, perPage, page).then((data) => {
-                     setLogs(data);
-                     //setAlertColor('success');
-                     //setSpinnerClass('displayNone');
-                     //setMsg('Logs Loaded.  Please continue.');
-                  });
-               });
-            })
-            .catch(function(err) {
-               // This code runs if there were any errors
-               console.log(err);
-               alert('no token found');
-               window.location.href = '/';
+      localForage
+         .getItem('token')
+         .then(function(startToken) {
+            getLogs(startToken).then((data) => {
+               setRows(data);
             });
-      }
-   }, [perPage, code, thetoken, pageCount, logsCount, page]);
+         })
+         .catch(function(err) {
+            // This code runs if there were any errors
+            console.log(err);
+            alert('no token found');
+            window.location.href = '/';
+         });
+   }, []);
 
-   const classes = useStyles();
+   const deleteHandler = () => {
+      setMsgArr(cubeMsgNext('Delete Logs not enabled', 'warning', msgArr));
+      setCubeWrapperAnim(
+         msgArr[msgArr.findIndex((el) => el.current === true)].anim
+      );
+   };
+
+   const handleRequestSort = (event, property) => {
+      const isAsc = orderBy === property && order === 'asc';
+      setOrder(isAsc ? 'desc' : 'asc');
+      setOrderBy(property);
+   };
+
+   const handleSelectAllClick = (event) => {
+      if (event.target.checked) {
+         const newSelecteds = rows.map((n) => n.name);
+         setSelected(newSelecteds);
+         return;
+      }
+      setSelected([]);
+   };
+
+   const handleClick = (id) => {
+      console.log('id: ' + id);
+      //console.log('event.target.id: ' + event.target.id);
+      const selectedIndex = selected.indexOf(id);
+      let newSelected = [];
+
+      if (selectedIndex === -1) {
+         newSelected = newSelected.concat(selected, id);
+      } else if (selectedIndex === 0) {
+         newSelected = newSelected.concat(selected.slice(1));
+      } else if (selectedIndex === selected.length - 1) {
+         newSelected = newSelected.concat(selected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+         newSelected = newSelected.concat(
+            selected.slice(0, selectedIndex),
+            selected.slice(selectedIndex + 1)
+         );
+      }
+      setSelected(newSelected);
+   };
+
+   const handleChangePage = (event, newPage) => {
+      setPage(newPage);
+   };
+
+   const handleChangeRowsPerPage = (event) => {
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0);
+   };
+
+   const handleChangeDense = (event) => {
+      setDense(event.target.checked);
+   };
+
+   //const isSelected = (name) => selected.indexOf(name) !== -1;
+   const isSelected = (id) => selected.indexOf(id) !== -1;
+
+   const emptyRows =
+      rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
    return (
       <div id='main' className='body'>
-         <h3>Logs</h3> <br />
-         {/*         <Msg
-            msgClass={msgClass}
-            spinnerClass={spinnerClass}
-            msg={msg}
-            alertColor={alertColor}
-         />
-*/}
-         <div style={{ backgroundColor: '#999', padding: 2 }}>
-            <Grid container spacing={0}>
-               <Grid item xs={6} sm={2}>
-                  <InputLabel id='page-label'>Per Page</InputLabel>
-                  <Select
-                     labelId='page-label'
-                     value={perPage}
-                     onChange={(event) => {
-                        perPageHandler(event);
-                     }}
-                  >
-                     <MenuItem value={5}>5</MenuItem>
-                     <MenuItem value={10}>10</MenuItem>
-                     <MenuItem value={20}>20</MenuItem>
-                     <MenuItem value={30}>30</MenuItem>
-                     <MenuItem value={50}>50</MenuItem>
-                  </Select>
-               </Grid>
-               <Grid item xs={6} sm={2}>
-                  <InputLabel id='type-label'>Type</InputLabel>
-                  <Select
-                     labelId='type-label'
-                     value={code}
-                     onChange={typeChange}
-                  >
-                     <MenuItem value={500}>500</MenuItem>
-                     <MenuItem value={404}>403</MenuItem>
-                     <MenuItem value={200}>200</MenuItem>
-                     <MenuItem value={1}>All</MenuItem>
-                  </Select>
-               </Grid>
-               <Grid item xs={12} sm={4}>
-                  <span style={{ color: 'blue' }}>
-                     {'' + logsCount + ' -  Results found'}
-                  </span>
-               </Grid>
-            </Grid>
+         <h3>Log Views</h3>
+         <div style={{ padding: 25, display: 'block' }}></div>
+         <div className='contain' style={{ marginLeft: 10 }}>
+            <div className={'cubeWrapperFluid ' + cubeWrapperAnim} id='stage'>
+               <CubeMsg
+                  msgArr={msgArr}
+                  width={'100%'}
+                  height={78}
+                  marginT={-60}
+               />
+            </div>
          </div>
-         <Alllogs logs={logs} />
+         <div style={{ padding: 15, display: 'block' }}></div>
          <div className={classes.root}>
-            <Pagination
-               style={{
-                  backgroundColor: '#aaaaaa',
-                  padding: 5,
-                  borderRadius: 5
-               }}
-               count={pageCount}
-               page={page}
-               color='secondary'
-               onClick={(event, page) => pageChange(event, page)}
+            <Paper className={classes.paper}>
+               <EnhancedTableToolbar
+                  numSelected={selected.length}
+                  deleteHandler={deleteHandler}
+               />
+               <TableContainer>
+                  <Table
+                     className={classes.table}
+                     aria-labelledby='tableTitle'
+                     size={dense ? 'small' : 'medium'}
+                     aria-label='enhanced table'
+                  >
+                     <EnhancedTableHead
+                        classes={classes}
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={handleSelectAllClick}
+                        onRequestSort={handleRequestSort}
+                        rowCount={rows.length}
+                     />
+                     <TableBody>
+                        {stableSort(rows, getComparator(order, orderBy))
+                           .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                           )
+                           .map((row, index) => {
+                              const isItemSelected = isSelected(row.id);
+                              const labelId = `enhanced-table-checkbox-${index}`;
+
+                              return (
+                                 <TableRow
+                                    hover
+                                    onClick={() => handleClick(row.id)}
+                                    role='checkbox'
+                                    aria-checked={isItemSelected}
+                                    tabIndex={-1}
+                                    key={row.id}
+                                    id={row.id}
+                                    selected={isItemSelected}
+                                 >
+                                    <TableCell padding='checkbox'>
+                                       <Checkbox
+                                          checked={isItemSelected}
+                                          inputProps={{
+                                             'aria-labelledby': labelId
+                                          }}
+                                       />
+                                    </TableCell>
+                                    <TableCell
+                                       component='th'
+                                       id={labelId}
+                                       scope='row'
+                                       padding='none'
+                                    >
+                                       {row.id}
+                                    </TableCell>
+                                    <TableCell align='right'>
+                                       {row.code}
+                                    </TableCell>
+                                    <TableCell align='right'>
+                                       {row.filename}
+                                    </TableCell>
+                                    <TableCell align='right'>
+                                       {row.msg_programmer}
+                                    </TableCell>
+                                    <TableCell align='right'>
+                                       {row.msg_app}
+                                    </TableCell>
+                                    <TableCell align='right'>
+                                       {row.refer}
+                                    </TableCell>
+                                    <TableCell align='right'>
+                                       {row.tdate}
+                                    </TableCell>
+                                 </TableRow>
+                              );
+                           })}
+                        {emptyRows > 0 && (
+                           <TableRow
+                              style={{ height: (dense ? 33 : 53) * emptyRows }}
+                           >
+                              <TableCell colSpan={6} />
+                           </TableRow>
+                        )}
+                     </TableBody>
+                  </Table>
+               </TableContainer>
+               <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component='div'
+                  count={rows.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onChangePage={handleChangePage}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}
+               />
+            </Paper>
+            <FormControlLabel
+               control={<Switch checked={dense} onChange={handleChangeDense} />}
+               label='Dense padding'
             />
          </div>
       </div>
