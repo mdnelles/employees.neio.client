@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import {
-   getEmployees,
-   removeEmployee,
-   addEmployee,
-   editEmployee
-} from './EmployeeFunctions';
+import { getEmployees, addEmployee } from './EmployeeFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
 
 import { cubeMsgNext, obj } from './_sharedFunctions';
 import { CubeMsg } from './3d/CubeMsg';
+import { EmployeesTable } from './tables/EmployeesTable';
 
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-
-import MaterialTable from 'material-table';
 
 export const Employees = () => {
    const [open, setOpen] = useState(false),
@@ -29,9 +24,12 @@ export const Employees = () => {
       [birth_date, setBirth_date] = useState(''),
       [hire_date, setHire_date] = useState(''),
       [firstName, setFirstName] = useState(''),
+      [dataFetched, setDataFetched] = useState(false),
       [reset, setReset] = useState(false),
       [lastName, setLastName] = useState(''),
       [msgArr, setMsgArr] = useState(obj),
+      [modalView, setModalView] = useState(false),
+      [modalId, setModalId] = useState(''),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
    const [state, setState] = useState({ columns: [], data: [] });
@@ -71,7 +69,7 @@ export const Employees = () => {
          last_name: lastName,
          birth_date: birth_date,
          gender: gender,
-         hire_date: hire_date
+         hire_date: hire_date,
       };
       setOpen(false);
       addEmployee(newEmployee, token).then((res) => {
@@ -104,6 +102,9 @@ export const Employees = () => {
          node.remove();
       }
    };
+   const modalClose = () => {
+      setModalView(false);
+   };
 
    useEffect(() => {
       setMsgArr(cubeMsgNext('Loading Employees', 'info', msgArr));
@@ -112,10 +113,11 @@ export const Employees = () => {
       );
       localForage
          .getItem('token')
-         .then(function(theToken) {
+         .then(function (theToken) {
             setToken(theToken);
             getEmployees(theToken).then((data) => {
                setMsgArr(cubeMsgNext('Employees Loaded', 'success', msgArr));
+               setDataFetched(true);
                setCubeWrapperAnim(
                   msgArr[msgArr.findIndex((el) => el.current === true)].anim
                );
@@ -128,14 +130,14 @@ export const Employees = () => {
                      { title: 'First Name', field: 'first_name' },
                      { title: 'Last Name', field: 'last_name' },
                      { title: 'G', field: 'gender' },
-                     { title: 'H-Date', field: 'hire_date' }
+                     { title: 'H-Date', field: 'hire_date' },
                   ],
-                  data: data
+                  data: data,
                });
             });
          })
 
-         .catch(function(err) {
+         .catch(function (err) {
             console.log(err);
             alert('no token found');
             window.location.href = '/';
@@ -235,69 +237,23 @@ export const Employees = () => {
          <br />
          <br />
 
-         <MaterialTable
-            title='Employees'
-            columns={state.columns}
-            data={state.data}
-            editable={{
-               onRowAdd: (newData) =>
-                  new Promise((resolve) => {
-                     setTimeout(() => {
-                        resolve();
-                        setState((prevState) => {
-                           const data = [...prevState.data];
-                           data.push(newData);
-                           return { ...prevState, data };
-                        });
-                     }, 600);
-                  }),
-               onRowUpdate: (newData, oldData) =>
-                  new Promise((resolve) => {
-                     //setTimeout(() => {
-                     editEmployee(newData, token).then((res) => {
-                        resolve();
-                        setMsgArr(
-                           cubeMsgNext(
-                              'New entry added to database',
-                              'success',
-                              msgArr
-                           )
-                        );
-                        // find number of next up slide and then update state of Cube Wrapper to trigger roll
-                        setCubeWrapperAnim(
-                           msgArr[msgArr.findIndex((el) => el.current === true)]
-                              .anim
-                        );
-                        if (oldData) {
-                           setState((prevState) => {
-                              const data = [...prevState.data];
-                              data[data.indexOf(oldData)] = newData;
-                              return { ...prevState, data };
-                           });
-                        }
-                     });
-                  }),
-               onRowDelete: (oldData) =>
-                  new Promise((resolve) => {
-                     //setTimeout(() => {
-                     removeEmployee(oldData.id, token).then(() => {
-                        setMsgArr(
-                           cubeMsgNext('Removed employee', 'Success', msgArr)
-                        );
-                        setCubeWrapperAnim(
-                           msgArr[msgArr.findIndex((el) => el.current === true)]
-                              .anim
-                        );
-                        resolve();
-                        setState((prevState) => {
-                           const data = [...prevState.data];
-                           data.splice(data.indexOf(oldData), 1);
-                           return { ...prevState, data };
-                        });
-                     });
-                  })
-            }}
-         />
+         {!dataFetched ? (
+            <CircularProgress />
+         ) : (
+            <EmployeesTable
+               data={employees}
+               state={state}
+               msgArr={msgArr}
+               token={token}
+               setMsgArr={setMsgArr}
+               setCubeWrapperAnim={setCubeWrapperAnim}
+               setState={setState}
+               modalView={modalView}
+               setModalView={setModalView}
+               setModalId={setModalId}
+               modalClose={modalClose}
+            />
+         )}
       </div>
    );
 };
