@@ -16,7 +16,7 @@ export const addEmployee = (newEmployee, theToken) => {
          password: newEmployee.password,
          admin: newEmployee.admin,
          token: theToken,
-         caller: 'EmployeeFunctions.register'
+         caller: 'EmployeeFunctions.register',
       })
       .then((res) => {
          console.log('Registered');
@@ -38,7 +38,7 @@ export const editEmployee = (editEmployee, theToken) => {
          email: editEmployee.email,
          password: editEmployee.password,
          token: theToken,
-         caller: 'EmployeeFunctions.editEmployee'
+         caller: 'EmployeeFunctions.editEmployee',
       })
       .then((res) => {
          console.log('EmployeeFunctions.editEmployee');
@@ -57,7 +57,7 @@ export const removeEmployee = (id, token) => {
       .post(serverPath + '/employee/remove_employee', {
          id,
          token,
-         caller: 'EmployeeFunctions.register'
+         caller: 'EmployeeFunctions.register',
       })
       .then((res) => {
          console.log('Employee Removed');
@@ -75,13 +75,27 @@ export const getEmployees = async (theToken) => {
    try {
       const res = await axios.post(serverPath + '/employee/get_employees', {
          token: theToken,
-         caller: 'EmployeeFunctions.getEmployee'
+         caller: 'EmployeeFunctions.getEmployee',
       });
       //console.log(res.data)
       return res.data;
    } catch (err) {
       console.log('ClientSide Error @ EmployeeFunctions > getEmployees ' + err);
       return '++Error Loc 07';
+   }
+};
+export const getDetails = async (id, theToken) => {
+   try {
+      const res = await axios.post(serverPath + '/employee/get_details', {
+         id,
+         token: theToken,
+         caller: 'EmployeeFunctions.details',
+      });
+      console.log(res.data);
+      return res.data;
+   } catch (err) {
+      console.log('ClientSide Error @ EmployeeFunctions.getDetails ' + err);
+      return 'ClientSide Error @ EmployeeFunctions.getDetails ';
    }
 };
 //export const employeeIsLoggedIn = token => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { removeEmployee, editEmployee } from './EmployeeFunctions';
+import { removeEmployee, editEmployee } from '../EmployeeFunctions';
 import MaterialTable from 'material-table';
 
 export const EmployeesTable = (props) => {
@@ -13,9 +13,24 @@ export const EmployeesTable = (props) => {
                   tooltip: 'Details',
                   onClick: (event, rowData) => {
                      // Do save operation
-                     console.log(rowData.emp_no);
-                     //props.setModalId(rowData.emp_no);
-                     //props.setModalView(true);
+                     props.setCardClass('displayBlock');
+                     props.setEmpData(rowData);
+                     props.getDetailsStart(rowData.emp_no);
+                     props.setMsgArr(
+                        props.cubeMsgNext(
+                           'Viewing Employee ' +
+                              rowData.first_name +
+                              ' ' +
+                              rowData.last_name,
+                           'info',
+                           props.msgArr
+                        )
+                     );
+                     props.setCubeWrapperAnim(
+                        props.msgArr[
+                           props.msgArr.findIndex((el) => el.current === true)
+                        ].anim
+                     );
                   },
                },
             ]}
@@ -40,7 +55,7 @@ export const EmployeesTable = (props) => {
                      editEmployee(newData, props.token).then((res) => {
                         resolve();
                         props.setMsgArr(
-                           cubeMsgNext(
+                           props.cubeMsgNext(
                               'New entry added to database',
                               'success',
                               props.msgArr
@@ -68,7 +83,7 @@ export const EmployeesTable = (props) => {
                      //setTimeout(() => {
                      removeEmployee(oldData.id, props.token).then(() => {
                         props.setMsgArr(
-                           cubeMsgNext(
+                           props.cubeMsgNext(
                               'Removed employee',
                               'Success',
                               props.msgArr

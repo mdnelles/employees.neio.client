@@ -32,7 +32,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 const rowStyle = {
    padding: 0,
-   display: 'block'
+   display: 'block',
 };
 const Space = () => {
    return <span> &nbsp; </span>;
@@ -81,17 +81,17 @@ const headCells = [
       id: 'filename',
       numeric: false,
       disablePadding: false,
-      label: 'Filename'
+      label: 'Filename',
    },
    {
       id: 'msg_programmer',
       numeric: false,
       disablePadding: false,
-      label: 'Msg'
+      label: 'Msg',
    },
    { id: 'msg_app', numeric: false, disablePadding: false, label: 'Msg(a)' },
    { id: 'refer', numeric: false, disablePadding: false, label: 'Refer' },
-   { id: 'tdate', numeric: false, disablePadding: false, label: 'Date' }
+   { id: 'tdate', numeric: false, disablePadding: false, label: 'Date' },
 ];
 
 /* -- */
@@ -104,7 +104,7 @@ function EnhancedTableHead(props) {
       orderBy,
       numSelected,
       rowCount,
-      onRequestSort
+      onRequestSort,
    } = props;
    const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
@@ -130,7 +130,7 @@ function EnhancedTableHead(props) {
                >
                   <TableSortLabel
                      active={orderBy === headCell.id}
-                     direction={orderBy === headCell.id ? order : 'asc'}
+                     direction={orderBy === headCell.id ? order : 'desc'}
                      onClick={createSortHandler(headCell.id)}
                   >
                      {headCell.label}
@@ -156,27 +156,27 @@ EnhancedTableHead.propTypes = {
    onSelectAllClick: PropTypes.func.isRequired,
    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
    orderBy: PropTypes.string.isRequired,
-   rowCount: PropTypes.number.isRequired
+   rowCount: PropTypes.number.isRequired,
 };
 
 const useToolbarStyles = makeStyles((theme) => ({
    root: {
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(1)
+      paddingRight: theme.spacing(1),
    },
    highlight:
       theme.palette.type === 'light'
          ? {
               color: theme.palette.secondary.main,
-              backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+              backgroundColor: lighten(theme.palette.secondary.light, 0.85),
            }
          : {
               color: theme.palette.text.primary,
-              backgroundColor: theme.palette.secondary.dark
+              backgroundColor: theme.palette.secondary.dark,
            },
    title: {
-      flex: '1 1 100%'
-   }
+      flex: '1 1 100%',
+   },
 }));
 
 const EnhancedTableToolbar = (props) => {
@@ -186,7 +186,7 @@ const EnhancedTableToolbar = (props) => {
    return (
       <Toolbar
          className={clsx(classes.root, {
-            [classes.highlight]: numSelected > 0
+            [classes.highlight]: numSelected > 0,
          })}
       >
          {numSelected > 0 ? (
@@ -230,19 +230,19 @@ const EnhancedTableToolbar = (props) => {
 };
 
 EnhancedTableToolbar.propTypes = {
-   numSelected: PropTypes.number.isRequired
+   numSelected: PropTypes.number.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
    root: {
-      width: '100%'
+      width: '100%',
    },
    paper: {
       width: '100%',
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
    },
    table: {
-      minWidth: 750
+      minWidth: 750,
    },
    visuallyHidden: {
       border: 0,
@@ -253,8 +253,8 @@ const useStyles = makeStyles((theme) => ({
       padding: 0,
       position: 'absolute',
       top: 20,
-      width: 1
-   }
+      width: 1,
+   },
 }));
 
 export const LogView = () => {
@@ -274,12 +274,12 @@ export const LogView = () => {
    useEffect(() => {
       localForage
          .getItem('token')
-         .then(function(startToken) {
+         .then(function (startToken) {
             getLogs(startToken).then((data) => {
                setRows(data);
             });
          })
-         .catch(function(err) {
+         .catch(function (err) {
             // This code runs if there were any errors
             console.log(err);
             alert('no token found');
@@ -411,7 +411,7 @@ export const LogView = () => {
                                        <Checkbox
                                           checked={isItemSelected}
                                           inputProps={{
-                                             'aria-labelledby': labelId
+                                             'aria-labelledby': labelId,
                                           }}
                                        />
                                     </TableCell>

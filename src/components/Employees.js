@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { getEmployees, addEmployee } from './EmployeeFunctions';
+import { getEmployees, addEmployee, getDetails } from './EmployeeFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
 
 import { cubeMsgNext, obj } from './_sharedFunctions';
 import { CubeMsg } from './3d/CubeMsg';
 import { EmployeesTable } from './tables/EmployeesTable';
+import { EmployeeCard } from './EmployeeCard';
 
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,7 +18,25 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 
+const useStyles = makeStyles({
+   root: {
+      minWidth: 275,
+   },
+   bullet: {
+      display: 'inline-block',
+      margin: '0 2px',
+      transform: 'scale(0.8)',
+   },
+   title: {
+      fontSize: 14,
+   },
+   pos: {
+      marginBottom: 12,
+   },
+});
+
 export const Employees = () => {
+   const classes = useStyles();
    const [open, setOpen] = useState(false),
       [token, setToken] = useState('no token'),
       [employees, setEmployees] = useState([]),
@@ -27,9 +47,10 @@ export const Employees = () => {
       [dataFetched, setDataFetched] = useState(false),
       [reset, setReset] = useState(false),
       [lastName, setLastName] = useState(''),
+      [empData, setEmpData] = useState({ departments: [], salaries: [] }),
+      [empData2, setEmpData2] = useState({}),
       [msgArr, setMsgArr] = useState(obj),
-      [modalView, setModalView] = useState(false),
-      [modalId, setModalId] = useState(''),
+      [cardClass, setCardClass] = useState('displayNone'),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
    const [state, setState] = useState({ columns: [], data: [] });
@@ -46,6 +67,14 @@ export const Employees = () => {
       if (str === undefined || str === '') {
          str = 'NA';
          return str;
+      }
+   };
+   const getDetailsStart = (id) => {
+      console.log(`quering id ${id}`);
+      if (id !== undefined) {
+         getDetails(id, token).then((data) => {
+            setEmpData2(data);
+         });
       }
    };
    const addEmployeeStart = () => {
@@ -95,17 +124,6 @@ export const Employees = () => {
       });
    };
 
-   // this is to remove the ADD button because in some cases we don't want to add a value
-   const removeAdd = () => {
-      var node = document.querySelector('[title="Add"]');
-      if (typeof node && node !== null && node !== undefined) {
-         node.remove();
-      }
-   };
-   const modalClose = () => {
-      setModalView(false);
-   };
-
    useEffect(() => {
       setMsgArr(cubeMsgNext('Loading Employees', 'info', msgArr));
       setCubeWrapperAnim(
@@ -142,7 +160,7 @@ export const Employees = () => {
             alert('no token found');
             window.location.href = '/';
          });
-   }, [reset]);
+   }, [reset, msgArr]);
 
    return (
       <div id='main' className='body'>
@@ -162,6 +180,11 @@ export const Employees = () => {
          <Button variant='contained' color='primary' onClick={handleClickOpen}>
             Add New Employee
          </Button>
+
+         <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
+            <EmployeeCard empData={empData} empData2={empData2} />
+         </div>
+
          <Dialog
             open={open}
             onClose={handleClose}
@@ -248,10 +271,11 @@ export const Employees = () => {
                setMsgArr={setMsgArr}
                setCubeWrapperAnim={setCubeWrapperAnim}
                setState={setState}
-               modalView={modalView}
-               setModalView={setModalView}
-               setModalId={setModalId}
-               modalClose={modalClose}
+               setCardClass={setCardClass}
+               setEmpData={setEmpData}
+               cubeMsgNext={cubeMsgNext}
+               setCubeWrapperAnim={setCubeWrapperAnim}
+               getDetailsStart={getDetailsStart}
             />
          )}
       </div>
