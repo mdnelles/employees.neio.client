@@ -10,7 +10,8 @@ import { Home } from './components/Home';
 import { Loading } from './components/Loading';
 import { LogView } from './components/LogView';
 import { Navbar } from './components/widgets/Navbar';
-import { DrawerCus } from './components/widgets/DrawerCus';
+import MiniDrawer from './components/widgets/MiniDrawer';
+//import { DrawerCus } from './components/widgets/DrawerCus';
 import { Users } from './components/Users';
 import { Employees } from './components/Employees';
 import { Departments } from './components/Departments';
@@ -30,7 +31,7 @@ export const AppWrapper = () => {
 
    useEffect(() => {
       localForage
-         .getItem('token', function(err, theToken) {
+         .getItem('token', function (err, theToken) {
             if (err) {
                console.error('token err -> ' + err);
             } else {
@@ -63,13 +64,12 @@ export const AppWrapper = () => {
    } else {
       ret = (
          <div>
-            <Navbar toggleDrawer={toggleDrawer} />
-            <DrawerCus
+            <MiniDrawer
                drawerState={drawerState}
                key={drawerState}
                toggleDrawer={toggleDrawer}
             />
-            <div className='appHolder'>
+            <div className='appHolder' style={{ marginLeft: 65 }}>
                <Route exact path='/dba' component={Dba} />
                <Route exact path='/home' component={Home} />
                <Route exact path='/logs' component={LogView} />
