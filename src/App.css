@@ -152,12 +152,19 @@ body {
 }
 
 /* /////// start keyfroms and animations ////// */
+.animFadeInFast {
+   animation-duration: 0.2s;
+   animation-name: fadeIn-kf;
+   animation-iteration-count: 1;
+   animation-direction: forward;
+   animation-fill-mode: forwards;
+}
 .animFadeIn {
    animation-duration: 1s;
    animation-name: fadeIn-kf;
    animation-iteration-count: 1;
    animation-direction: forward;
-   animation-timing-function: ease-in-out;
+   animation-fill-mode: forwards;
 }
 @keyframes fadeIn-kf {
    from {
@@ -167,12 +174,19 @@ body {
       opacity: 1;
    }
 }
+.animFadeOutFast {
+   animation-duration: 0.2s;
+   animation-name: fadeOut-kf;
+   animation-iteration-count: 1;
+   animation-direction: forward;
+   animation-fill-mode: forwards;
+}
 .animFadeOut {
    animation-duration: 1s;
    animation-name: fadeOut-kf;
    animation-iteration-count: 1;
    animation-direction: forward;
-   animation-timing-function: ease-in-out;
+   animation-fill-mode: forwards;
 }
 @keyframes fadeOut-kf {
    from {

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import localForage from 'localforage';
 import './config'; // adding config for folder specific build
 
 var thisServer = window.location.href;

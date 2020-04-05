@@ -19,7 +19,6 @@ import MaterialTable from 'material-table';
 export const Users = () => {
    const [open, setOpen] = useState(false),
       [token, setToken] = useState('no token'),
-      [users, setUsers] = useState([]),
       [email, setEmail] = useState(''),
       [password, setPassword] = useState(''),
       [firstName, setFirstName] = useState(''),
@@ -62,13 +61,13 @@ export const Users = () => {
          first_name: firstName,
          last_name: lastName,
          email: email,
-         password: password
+         password: password,
       };
       setOpen(false);
       addUser(newUser, token).then((res) => {
          getUsers(token).then((data) => {
             console.log(data);
-            setUsers(data);
+            //setUsers(data);
             setReset(!reset);
          });
 
@@ -102,14 +101,14 @@ export const Users = () => {
       );
       localForage
          .getItem('token')
-         .then(function(theToken) {
+         .then(function (theToken) {
             setToken(theToken);
             getUsers(theToken).then((data) => {
                setMsgArr(cubeMsgNext('Users Loaded', 'success', msgArr));
                setCubeWrapperAnim(
                   msgArr[msgArr.findIndex((el) => el.current === true)].anim
                );
-               setUsers(data);
+               //setUsers(data);
                setTimeout(() => {
                   removeAdd();
                }, 2000);
@@ -119,19 +118,19 @@ export const Users = () => {
                      { title: 'Email', field: 'email' },
                      { title: 'First Name', field: 'first_name' },
                      { title: 'Last Name', field: 'last_name' },
-                     { title: 'Last Seen', field: 'last_login' }
+                     { title: 'Last Seen', field: 'last_login' },
                   ],
-                  data: data
+                  data: data,
                });
             });
          })
 
-         .catch(function(err) {
+         .catch(function (err) {
             console.log(err);
             alert('no token found');
             window.location.href = '/';
          });
-   }, [reset]);
+   }, [reset, msgArr]);
 
    return (
       <div id='main' className='body'>
@@ -277,7 +276,7 @@ export const Users = () => {
                            return { ...prevState, data };
                         });
                      });
-                  })
+                  }),
             }}
          />
       </div>

@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getLogs, getLogsCount } from './LogFunctions';
+import { getLogs } from './LogFunctions';
 import localForage from 'localforage';
 
 import { cubeMsgNext, obj } from './_sharedFunctions';
 import { CubeMsg } from './3d/CubeMsg';
 
-import Grid from '@material-ui/core/Grid';
-import ErrorIcon from '@material-ui/icons/Error';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -29,24 +26,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
-
-const rowStyle = {
-   padding: 0,
-   display: 'block',
-};
-const Space = () => {
-   return <span> &nbsp; </span>;
-};
-const RedErrorIcon = () => {
-   return <ErrorIcon size='sm' style={{ fill: 'red', fontSize: 15 }} />;
-};
-const GreenCheckIcon = () => {
-   return <CheckCircleIcon size='sm' style={{ fill: 'green', fontSize: 15 }} />;
-};
-
-function createData(id, code, filename, msg_programmer, msg_app, refer, tdate) {
-   return { id, code, filename, msg_programmer, msg_app, refer, tdate };
-}
 
 function descendingComparator(a, b, orderBy) {
    if (b[orderBy] < a[orderBy]) {
@@ -261,7 +240,6 @@ export const LogView = () => {
    const classes = useStyles();
 
    const [rows, setRows] = useState([]),
-      [thetoken, setThetoken] = useState('NA'),
       [order, setOrder] = React.useState('asc'),
       [orderBy, setOrderBy] = React.useState('tdate'),
       [selected, setSelected] = React.useState([]),

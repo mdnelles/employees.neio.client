@@ -1,5 +1,4 @@
 import React from 'react';
-import { removeEmployee, editEmployee } from '../EmployeeFunctions';
 import MaterialTable from 'material-table';
 
 export const EmployeesTable = (props) => {
@@ -13,7 +12,7 @@ export const EmployeesTable = (props) => {
                   tooltip: 'Details',
                   onClick: (event, rowData) => {
                      // Do save operation
-                     props.setCardClass('displayBlock');
+                     props.setAlert2Class('displayNone');
                      props.setEmpData(rowData);
                      props.getDetailsStart(rowData.emp_no);
                      props.setMsgArr(
@@ -51,8 +50,8 @@ export const EmployeesTable = (props) => {
                   }),
                onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
-                     //setTimeout(() => {
-                     editEmployee(newData, props.token).then((res) => {
+                     setTimeout(() => {
+                        //editEmployee(newData, props.token).then((res) => {
                         resolve();
                         props.setMsgArr(
                            props.cubeMsgNext(
@@ -76,12 +75,17 @@ export const EmployeesTable = (props) => {
                               return { ...prevState, data };
                            });
                         }
-                     });
+                        props.setAlert2Class('fadeInFast');
+                        props.setAlert2Msg(
+                           'NOTE: This is a demo so this data UPDATE will not persist.'
+                        );
+                        props.setAlert2Severity('warning');
+                     }, 600);
                   }),
                onRowDelete: (oldData) =>
                   new Promise((resolve) => {
-                     //setTimeout(() => {
-                     removeEmployee(oldData.id, props.token).then(() => {
+                     setTimeout(() => {
+                        //removeEmployee(oldData.id, props.token).then(() => {
                         props.setMsgArr(
                            props.cubeMsgNext(
                               'Removed employee',
@@ -102,7 +106,12 @@ export const EmployeesTable = (props) => {
                            props.data.splice(props.data.indexOf(oldData), 1);
                            return { ...prevState, data };
                         });
-                     });
+                        props.setAlert2Class('fadeInFast');
+                        props.setAlert2Msg(
+                           'NOTE: This is a demo so this DELETE will not persist.'
+                        );
+                        props.setAlert2Severity('warning');
+                     }, 600);
                   }),
             }}
          />

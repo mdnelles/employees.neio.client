@@ -1,11 +1,6 @@
 import React from 'react';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
-const ms = {
-   marginTop: 5,
-   marginBottom: 5
-};
-
 export const Msg = (props) => {
    let alertTitle = props.alertColor.replace(/^./, (str) => str.toUpperCase());
    //console.log('in msg');

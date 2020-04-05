@@ -3,12 +3,12 @@ import { getEmployees, addEmployee, getDetails } from './EmployeeFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
 
+import Alert from '@material-ui/lab/Alert';
 import { cubeMsgNext, obj } from './_sharedFunctions';
 import { CubeMsg } from './3d/CubeMsg';
 import { EmployeesTable } from './tables/EmployeesTable';
 import { EmployeeCard } from './EmployeeCard';
 
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,26 +18,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 
-const useStyles = makeStyles({
-   root: {
-      minWidth: 275,
-   },
-   bullet: {
-      display: 'inline-block',
-      margin: '0 2px',
-      transform: 'scale(0.8)',
-   },
-   title: {
-      fontSize: 14,
-   },
-   pos: {
-      marginBottom: 12,
-   },
-});
-
 export const Employees = () => {
-   const classes = useStyles();
    const [open, setOpen] = useState(false),
+      [alert2Severity, setAlert2Severity] = useState('warning'),
+      [alert2Msg, setAlert2Msg] = useState(''),
+      [alert2Class, setAlert2Class] = useState('displayNone'),
       [token, setToken] = useState('no token'),
       [employees, setEmployees] = useState([]),
       [gender, setGender] = useState(''),
@@ -55,10 +40,6 @@ export const Employees = () => {
 
    const [state, setState] = useState({ columns: [], data: [] });
 
-   const handleClickOpen = () => {
-      setOpen(true);
-   };
-
    const handleClose = () => {
       setOpen(false);
    };
@@ -70,9 +51,15 @@ export const Employees = () => {
       }
    };
    const getDetailsStart = (id) => {
-      console.log(`quering id ${id}`);
       if (id !== undefined) {
+         if (cardClass === 'animFadeInFast' || cardClass === 'displayBlock') {
+            setCardClass('animFadeOutFast');
+         }
+         console.log('just set found out');
          getDetails(id, token).then((data) => {
+            setTimeout(() => {
+               setCardClass('animFadeInFast');
+            }, 300);
             setEmpData2(data);
          });
       }
@@ -177,9 +164,6 @@ export const Employees = () => {
             </div>
          </div>
          <div style={{ padding: 15, display: 'block' }}></div>
-         <Button variant='contained' color='primary' onClick={handleClickOpen}>
-            Add New Employee
-         </Button>
 
          <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
             <EmployeeCard empData={empData} empData2={empData2} />
@@ -259,6 +243,11 @@ export const Employees = () => {
          </Dialog>
          <br />
          <br />
+         <div style={{ paddingBottom: 15 }} class={alert2Class}>
+            <Alert severity={alert2Severity} variant='filled'>
+               {alert2Msg}
+            </Alert>
+         </div>
 
          {!dataFetched ? (
             <CircularProgress />
@@ -274,8 +263,10 @@ export const Employees = () => {
                setCardClass={setCardClass}
                setEmpData={setEmpData}
                cubeMsgNext={cubeMsgNext}
-               setCubeWrapperAnim={setCubeWrapperAnim}
                getDetailsStart={getDetailsStart}
+               setAlert2Class={setAlert2Class}
+               setAlert2Msg={setAlert2Msg}
+               setAlert2Severity={setAlert2Severity}
             />
          )}
       </div>
