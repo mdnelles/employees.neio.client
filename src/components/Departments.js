@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { getUsers, removeUser, addUser } from './UserFunctions';
+import {
+   getDepartments,
+   addDepartment,
+   getDetails,
+} from './DepartmentFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
 
-import { Msg } from './widgets/Msg';
+import Alert from '@material-ui/lab/Alert';
+import { cubeMsgNext, obj } from './_sharedFunctions';
+import { CubeMsg } from './3d/CubeMsg';
+import { DepartmentsTable } from './tables/DepartmentsTable';
+import { DepartmentCard } from './DepartmentCard';
 
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -14,62 +22,27 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-
-const useStyles = makeStyles({
-   table: {
-      minWidth: 650
-   }
-});
-
 export const Departments = () => {
-   const [open, setOpen] = useState(false);
-   const [token, setToken] = useState('no token');
-   const [users, setUsers] = useState([]);
-   const [email, setEmail] = useState('');
-   const [password, setPassword] = useState('');
-   const [firstName, setFirstName] = useState('');
-   const [lastName, setLastName] = useState('');
+   const [open, setOpen] = useState(false),
+      [alert2Severity, setAlert2Severity] = useState('warning'),
+      [alert2Msg, setAlert2Msg] = useState(''),
+      [alert2Class, setAlert2Class] = useState('displayNone'),
+      [token, setToken] = useState('no token'),
+      [departments, setDepartments] = useState([]),
+      [gender, setGender] = useState(''),
+      [birth_date, setBirth_date] = useState(''),
+      [hire_date, setHire_date] = useState(''),
+      [firstName, setFirstName] = useState(''),
+      [dataFetched, setDataFetched] = useState(false),
+      [reset, setReset] = useState(false),
+      [lastName, setLastName] = useState(''),
+      [empData, setEmpData] = useState({ departments: [], salaries: [] }),
+      [empData2, setEmpData2] = useState({}),
+      [msgArr, setMsgArr] = useState(obj),
+      [cardClass, setCardClass] = useState('displayNone'),
+      [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
-   const [msgClass, setMsgClass] = useState('displayNone');
-   const [spinnerClass, setSpinnerClass] = useState('displayNone');
-   const [msg, setMsg] = useState('');
-   const [alertColor, setAlertColor] = useState('info');
-
-   const classes = useStyles();
-
-   const editUserStart = (theUuid) => {
-      setSpinnerClass('displayNone');
-      setMsgClass('displayBlock');
-      setAlertColor('error');
-      setMsg('Edit Feature has been disabled for this app');
-   };
-
-   const removeUserStart = (theUuid) => {
-      if (window.confirm('Are you sure you want to delete this?')) {
-         if (theUuid !== undefined) {
-            removeUser(theUuid, token)
-               .then((res) => {
-                  setUsers(users.filter((user) => user.uuid !== theUuid));
-               })
-               .catch((err) => {
-                  console.log('Err: could not remove user ' + err);
-               });
-         }
-      } else {
-         return false;
-      }
-   };
-
-   const handleClickOpen = () => {
-      setOpen(true);
-   };
+   const [state, setState] = useState({ columns: [], data: [] });
 
    const handleClose = () => {
       setOpen(false);
@@ -81,70 +54,125 @@ export const Departments = () => {
          return str;
       }
    };
-   const addUserStart = (data) => {
-      setMsgClass('displayBlock');
-      setSpinnerClass('displayBlock');
-      setMsg('Adding user to database');
+   const getDetailsStart = (id) => {
+      if (id !== undefined) {
+         if (cardClass === 'animFadeInFast' || cardClass === 'displayBlock') {
+            setCardClass('animFadeOutFast');
+         }
+         console.log('just set found out');
+         getDetails(id, token).then((data) => {
+            setTimeout(() => {
+               setCardClass('animFadeInFast');
+            }, 300);
+            setEmpData2(data);
+         });
+      }
+   };
+   const addDepartmentStart = () => {
+      //setSpinnerClass('displayBlock');
+      setMsgArr(
+         cubeMsgNext('Adding Department to Database...', 'success', msgArr)
+      );
+      setCubeWrapperAnim(
+         msgArr[msgArr.findIndex((el) => el.current === true)].anim
+      );
 
       setFirstName(clearUndefined(firstName));
       setLastName(clearUndefined(lastName));
-      setEmail(clearUndefined(email));
-      setPassword(clearUndefined(password));
+      setBirth_date(clearUndefined(birth_date));
+      setHire_date(clearUndefined(hire_date));
 
       var id = uuid();
-      var newUser = {
+      var newDepartment = {
          uuid: id,
          first_name: firstName,
          last_name: lastName,
-         email: email,
-         password: password
+         birth_date: birth_date,
+         gender: gender,
+         hire_date: hire_date,
       };
       setOpen(false);
-      addUser(newUser, token).then((res) => {
-         console.log(res);
-         //setAllVals([...allVals,newData]);
-         setUsers([...users, newUser]);
-         setEmail(''); // clear values
-         setPassword('');
+      addDepartment(newDepartment, token).then((res) => {
+         getDepartments(token).then((data) => {
+            console.log(data);
+            setDepartments(data);
+            setReset(!reset);
+         });
+
+         setBirth_date(''); // clear values
+         setHire_date('');
+         setGender('');
          setFirstName('');
          setLastName('');
-         setSpinnerClass('displayNone');
-         setAlertColor('success');
-         setMsg('New Entry added to Database');
+         //setSpinnerClass('displayNone');
+         setMsgArr(
+            cubeMsgNext('New entry added to database', 'success', msgArr)
+         );
+         // find number of next up slide and then update state of Cube Wrapper to trigger roll
+         setCubeWrapperAnim(
+            msgArr[msgArr.findIndex((el) => el.current === true)].anim
+         );
       });
    };
 
    useEffect(() => {
-      //localForage.getItem('token', function(err, theToken) {
+      setMsgArr(cubeMsgNext('Loading Departments', 'info', msgArr));
+      setCubeWrapperAnim(
+         msgArr[msgArr.findIndex((el) => el.current === true)].anim
+      );
       localForage
          .getItem('token')
-         .then(function(theToken) {
+         .then(function (theToken) {
             setToken(theToken);
-            getUsers(theToken).then((data) => {
-               setUsers(data);
-               console.log(data);
+            getDepartments(theToken).then((data) => {
+               setMsgArr(cubeMsgNext('Departments Loaded', 'success', msgArr));
+               setDataFetched(true);
+               setCubeWrapperAnim(
+                  msgArr[msgArr.findIndex((el) => el.current === true)].anim
+               );
+               setDepartments(data);
+
+               setState({
+                  columns: [
+                     { title: 'Emp#', field: 'emp_no' },
+                     { title: 'DOB', field: 'birth_date' },
+                     { title: 'First Name', field: 'first_name' },
+                     { title: 'Last Name', field: 'last_name' },
+                     { title: 'G', field: 'gender' },
+                     { title: 'H-Date', field: 'hire_date' },
+                  ],
+                  data: data,
+               });
             });
          })
-         .catch(function(err) {
-            // This code runs if there were any errors
+
+         .catch(function (err) {
             console.log(err);
             alert('no token found');
             window.location.href = '/';
          });
-   }, []);
+   }, [reset, msgArr]);
 
    return (
       <div id='main' className='body'>
-         <h3>Departments</h3> <br />
-         <Msg
-            msgClass={msgClass}
-            spinnerClass={spinnerClass}
-            msg={msg}
-            alertColor={alertColor}
-         />
-         <Button variant='contained' color='primary' onClick={handleClickOpen}>
-            Add Department
-         </Button>
+         <h3>Departments</h3>
+         <div style={{ padding: 25, display: 'block' }}></div>
+         <div className='contain' style={{ marginLeft: 10 }}>
+            <div className={'cubeWrapperFluid ' + cubeWrapperAnim} id='stage'>
+               <CubeMsg
+                  msgArr={msgArr}
+                  width={'100%'}
+                  height={78}
+                  marginT={-60}
+               />
+            </div>
+         </div>
+         <div style={{ padding: 15, display: 'block' }}></div>
+
+         <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
+            <DepartmentCard empData={empData} empData2={empData2} />
+         </div>
+
          <Dialog
             open={open}
             onClose={handleClose}
@@ -152,25 +180,16 @@ export const Departments = () => {
          >
             <DialogTitle id='form-dialog-title'>Subscribe</DialogTitle>
             <DialogContent>
-               <DialogContentText>Add New User</DialogContentText>
+               <DialogContentText>Add New Department</DialogContentText>
                <TextField
                   autoFocus
                   margin='dense'
-                  defaultValue={email}
-                  id='email'
-                  label='Email Address'
-                  type='email'
+                  defaultValue={birth_date}
+                  id='birth_date'
+                  label='Birthdate'
+                  type='birth_date'
                   fullWidth
-                  onChange={(event) => setEmail(event.target.value)}
-               />
-               <TextField
-                  margin='dense'
-                  id='password'
-                  label='password'
-                  type='password'
-                  defaultValue={password}
-                  fullWidth
-                  onChange={(event) => setPassword(event.target.value)}
+                  onChange={(event) => setBirth_date(event.target.value)}
                />
                <TextField
                   margin='dense'
@@ -190,6 +209,24 @@ export const Departments = () => {
                   fullWidth
                   onChange={(event) => setLastName(event.target.value)}
                />
+               <TextField
+                  margin='dense'
+                  id='gender'
+                  label='gender'
+                  type='gender'
+                  defaultValue={gender}
+                  fullWidth
+                  onChange={(event) => setGender(event.target.value)}
+               />
+               <TextField
+                  margin='dense'
+                  id='hire_date'
+                  label='hire_date'
+                  type='hire_date'
+                  defaultValue={hire_date}
+                  fullWidth
+                  onChange={(event) => setHire_date(event.target.value)}
+               />
             </DialogContent>
             <DialogActions>
                <Button
@@ -200,55 +237,42 @@ export const Departments = () => {
                   Cancel
                </Button>
                <Button
-                  onClick={addUserStart}
+                  onClick={addDepartmentStart}
                   color='primary'
                   variant='contained'
                >
-                  Save New User
+                  Save New Department
                </Button>
             </DialogActions>
          </Dialog>
          <br />
          <br />
-         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label='simple table'>
-               <TableHead>
-                  <TableRow>
-                     <TableCell>ID</TableCell>
-                     <TableCell align='left'>Email</TableCell>
-                     <TableCell align='left'>First Name</TableCell>
-                     <TableCell align='left'>Last Name</TableCell>
-                     <TableCell align='left'>Last Login</TableCell>
-                     <TableCell align='left'></TableCell>
-                  </TableRow>
-               </TableHead>
-               <TableBody>
-                  {users.map((user) => (
-                     <TableRow key={user.uuid}>
-                        <TableCell component='th' scope='row'>
-                           {user.id}
-                        </TableCell>
-                        <TableCell align='left'>{user.email}</TableCell>
-                        <TableCell align='left'>{user.first_name}</TableCell>
-                        <TableCell align='left'>{user.last_name}</TableCell>
-                        <TableCell align='left'>
-                           {user.last_login !== undefined
-                              ? user.last_login.toString().replace('.000Z', '')
-                              : ''}
-                        </TableCell>
-                        <TableCell align='left'>
-                           <Button onClick={() => editUserStart(user.uuid)}>
-                              Edit
-                           </Button>
-                           <Button onClick={() => removeUserStart(user.uuid)}>
-                              Delete
-                           </Button>
-                        </TableCell>
-                     </TableRow>
-                  ))}
-               </TableBody>
-            </Table>
-         </TableContainer>
+         <div style={{ paddingBottom: 15 }} class={alert2Class}>
+            <Alert severity={alert2Severity} variant='filled'>
+               {alert2Msg}
+            </Alert>
+         </div>
+
+         {!dataFetched ? (
+            <CircularProgress />
+         ) : (
+            <DepartmentsTable
+               data={departments}
+               state={state}
+               msgArr={msgArr}
+               token={token}
+               setMsgArr={setMsgArr}
+               setCubeWrapperAnim={setCubeWrapperAnim}
+               setState={setState}
+               setCardClass={setCardClass}
+               setEmpData={setEmpData}
+               cubeMsgNext={cubeMsgNext}
+               getDetailsStart={getDetailsStart}
+               setAlert2Class={setAlert2Class}
+               setAlert2Msg={setAlert2Msg}
+               setAlert2Severity={setAlert2Severity}
+            />
+         )}
       </div>
    );
 };
