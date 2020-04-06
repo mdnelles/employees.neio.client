@@ -85,10 +85,17 @@ export const DepartmentsTable = (props) => {
                onRowDelete: (oldData) =>
                   new Promise((resolve) => {
                      setTimeout(() => {
-                        //removeDepartment(oldData.id, props.token).then(() => {
+                        //// start
+                        resolve();
+                        props.setState((prevState) => {
+                           const data = [...prevState.data];
+                           data.splice(data.indexOf(oldData), 1);
+                           return { ...prevState, data };
+                        });
+                        //// finish
                         props.setMsgArr(
                            props.cubeMsgNext(
-                              'Removed department',
+                              'Removed employee',
                               'Success',
                               props.msgArr
                            )
@@ -100,12 +107,7 @@ export const DepartmentsTable = (props) => {
                               )
                            ].anim
                         );
-                        resolve();
-                        props.setState((prevState) => {
-                           const data = [...prevState.data];
-                           props.data.splice(props.data.indexOf(oldData), 1);
-                           return { ...prevState, data };
-                        });
+
                         props.setAlert2Class('fadeInFast');
                         props.setAlert2Msg(
                            'NOTE: This is a demo so this DELETE will not persist.'

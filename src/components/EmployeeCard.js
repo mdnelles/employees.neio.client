@@ -7,12 +7,13 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import CloseIcon from '@material-ui/icons/Close';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import uuid from 'uuid';
 
 const useStyles = makeStyles({
    root: {
@@ -43,9 +44,6 @@ const theme = createMuiTheme({
 
 export const EmployeeCard = (props) => {
    const classes = useStyles();
-   console.log('follow');
-   console.log(props.empData2);
-   //formatMoney(row.salary, 0, '.', ','
 
    if (
       props.empData2.departments === undefined ||
@@ -65,8 +63,11 @@ export const EmployeeCard = (props) => {
                      </Avatar>
                   }
                   action={
-                     <IconButton aria-label='settings'>
-                        <MoreVertIcon />
+                     <IconButton
+                        aria-label='settings'
+                        onClick={props.closeCard}
+                     >
+                        <CloseIcon />
                      </IconButton>
                   }
                   title={
@@ -87,7 +88,7 @@ export const EmployeeCard = (props) => {
                         </TableHead>
                         <TableBody>
                            {props.empData2.departments.map((row) => (
-                              <TableRow key={row.emp_no + row.dept_no}>
+                              <TableRow key={uuid()}>
                                  <TableCell align='left'>
                                     {row.dept_no}
                                  </TableCell>

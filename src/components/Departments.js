@@ -50,6 +50,13 @@ export const Departments = () => {
       }
    };
 
+   const closeCard = () => {
+      setCardClass('animFadeOutFast');
+      setTimeout(() => {
+         setCardClass('displayNone');
+      }, 500);
+   };
+
    useEffect(() => {
       setMsgArr(cubeMsgNext('Loading Departments', 'info', msgArr));
       setCubeWrapperAnim(
@@ -105,6 +112,7 @@ export const Departments = () => {
             <DepartmentCard
                viewDepartment={viewDepartment}
                dataByDepartment={dataByDepartment}
+               closeCard={closeCard}
             />
          </div>
 

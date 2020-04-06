@@ -1,11 +1,13 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import CloseIcon from '@material-ui/icons/Close';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,6 +15,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import uuid from 'uuid';
 
 const useStyles = makeStyles({
    root: {
@@ -31,6 +34,16 @@ const useStyles = makeStyles({
    },
    container: {
       maxHeight: 440,
+   },
+});
+const theme = createMuiTheme({
+   overrides: {
+      MuiTableCell: {
+         root: {
+            //This can be referred from Material UI API documentation.
+            padding: '4px 8px',
+         },
+      },
    },
 });
 const columns = [
@@ -57,10 +70,6 @@ export const DepartmentCard = (props) => {
 
    React.useEffect(() => {});
 
-   console.log(
-      'props.viewDepartment.dept_name = ' + props.viewDepartment.dept_name
-   );
-
    if (
       props.viewDepartment.dept_name === undefined ||
       props.viewDepartment.dept_name === ''
@@ -80,7 +89,7 @@ export const DepartmentCard = (props) => {
                   }
                   action={
                      <IconButton aria-label='settings'>
-                        <MoreVertIcon />
+                        <CloseIcon onClick={props.closeCard} />
                      </IconButton>
                   }
                   title={props.viewDepartment.dept_name}
@@ -88,64 +97,66 @@ export const DepartmentCard = (props) => {
                />
 
                <CardContent>
-                  <TableContainer className={classes.container}>
-                     <Table stickyHeader aria-label='sticky table'>
-                        <TableHead>
-                           <TableRow>
-                              {columns.map((column) => (
-                                 <TableCell
-                                    key={column.emp_no + column.to_date}
-                                    align={column.align}
-                                    style={{ minWidth: column.minWidth }}
-                                 >
-                                    {column.label}
-                                 </TableCell>
-                              ))}
-                           </TableRow>
-                        </TableHead>
-                        <TableBody>
-                           {rows
-                              .slice(
-                                 page * rowsPerPage,
-                                 page * rowsPerPage + rowsPerPage
-                              )
-                              .map((row) => {
-                                 return (
-                                    <TableRow
-                                       hover
-                                       role='checkbox'
-                                       tabIndex={-1}
-                                       key={row.code}
+                  <ThemeProvider theme={theme}>
+                     <TableContainer className={classes.container}>
+                        <Table stickyHeader aria-label='sticky table'>
+                           <TableHead>
+                              <TableRow>
+                                 {columns.map((column) => (
+                                    <TableCell
+                                       key={uuid()}
+                                       align={column.align}
+                                       style={{ minWidth: column.minWidth }}
                                     >
-                                       {columns.map((column) => {
-                                          const value = row[column.id];
-                                          return (
-                                             <TableCell
-                                                key={column.id}
-                                                align={column.align}
-                                             >
-                                                {column.format &&
-                                                typeof value === 'number'
-                                                   ? column.format(value)
-                                                   : value}
-                                             </TableCell>
-                                          );
-                                       })}
-                                    </TableRow>
-                                 );
-                              })}
-                        </TableBody>
-                     </Table>
-                  </TableContainer>
-                  <TablePagination
-                     rowsPerPageOptions={[5, 10, 25]}
-                     component='div'
-                     count={rows.length}
-                     rowsPerPage={rowsPerPage}
-                     page={page}
-                     onChangePage={handleChangePage}
-                     onChangeRowsPerPage={handleChangeRowsPerPage}
-                  />
+                                       {column.label}
+                                    </TableCell>
+                                 ))}
+                              </TableRow>
+                           </TableHead>
+                           <TableBody>
+                              {rows
+                                 .slice(
+                                    page * rowsPerPage,
+                                    page * rowsPerPage + rowsPerPage
+                                 )
+                                 .map((row) => {
+                                    return (
+                                       <TableRow
+                                          hover
+                                          role='checkbox'
+                                          tabIndex={-1}
+                                          key={row.code}
+                                       >
+                                          {columns.map((column) => {
+                                             const value = row[column.id];
+                                             return (
+                                                <TableCell
+                                                   key={column.id}
+                                                   align={column.align}
+                                                >
+                                                   {column.format &&
+                                                   typeof value === 'number'
+                                                      ? column.format(value)
+                                                      : value}
+                                                </TableCell>
+                                             );
+                                          })}
+                                       </TableRow>
+                                    );
+                                 })}
+                           </TableBody>
+                        </Table>
+                     </TableContainer>
+                     <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component='div'
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                     />
+                  </ThemeProvider>
                </CardContent>
             </Card>
          </div>

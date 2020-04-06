@@ -51,12 +51,17 @@ export const Employees = () => {
          return str;
       }
    };
+   const closeCard = () => {
+      setCardClass('animFadeOutFast');
+      setTimeout(() => {
+         setCardClass('displayNone');
+      }, 500);
+   };
    const getDetailsStart = (id) => {
       if (id !== undefined) {
          if (cardClass === 'animFadeInFast' || cardClass === 'displayBlock') {
             setCardClass('animFadeOutFast');
          }
-         console.log('just set found out');
          getDetails(id, token).then((data) => {
             setTimeout(() => {
                setCardClass('animFadeInFast');
@@ -91,7 +96,6 @@ export const Employees = () => {
       setOpen(false);
       addEmployee(newEmployee, token).then((res) => {
          getEmployees(token).then((data) => {
-            console.log(data);
             setEmployees(data);
             setReset(!reset);
          });
@@ -167,7 +171,11 @@ export const Employees = () => {
          <div style={{ padding: 15, display: 'block' }}></div>
 
          <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
-            <EmployeeCard empData={empData} empData2={empData2} />
+            <EmployeeCard
+               empData={empData}
+               empData2={empData2}
+               closeCard={closeCard}
+            />
          </div>
 
          <Dialog

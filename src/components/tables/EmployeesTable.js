@@ -85,7 +85,14 @@ export const EmployeesTable = (props) => {
                onRowDelete: (oldData) =>
                   new Promise((resolve) => {
                      setTimeout(() => {
-                        //removeEmployee(oldData.id, props.token).then(() => {
+                        //// start
+                        resolve();
+                        props.setState((prevState) => {
+                           const data = [...prevState.data];
+                           data.splice(data.indexOf(oldData), 1);
+                           return { ...prevState, data };
+                        });
+                        //// finish
                         props.setMsgArr(
                            props.cubeMsgNext(
                               'Removed employee',
@@ -100,12 +107,7 @@ export const EmployeesTable = (props) => {
                               )
                            ].anim
                         );
-                        resolve();
-                        props.setState((prevState) => {
-                           const data = [...prevState.data];
-                           props.data.splice(props.data.indexOf(oldData), 1);
-                           return { ...prevState, data };
-                        });
+
                         props.setAlert2Class('fadeInFast');
                         props.setAlert2Msg(
                            'NOTE: This is a demo so this DELETE will not persist.'
