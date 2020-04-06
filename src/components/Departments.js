@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
    getDepartments,
    addDepartment,
-   getDetails,
+   getDeptDetails,
 } from './DepartmentFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
@@ -13,14 +13,7 @@ import { CubeMsg } from './3d/CubeMsg';
 import { DepartmentsTable } from './tables/DepartmentsTable';
 import { DepartmentCard } from './DepartmentCard';
 
-import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
 
 export const Departments = () => {
    const [open, setOpen] = useState(false),
@@ -28,91 +21,33 @@ export const Departments = () => {
       [alert2Msg, setAlert2Msg] = useState(''),
       [alert2Class, setAlert2Class] = useState('displayNone'),
       [token, setToken] = useState('no token'),
-      [departments, setDepartments] = useState([]),
-      [gender, setGender] = useState(''),
-      [birth_date, setBirth_date] = useState(''),
-      [hire_date, setHire_date] = useState(''),
-      [firstName, setFirstName] = useState(''),
+      [dataByDepartment, setDataByDepartment] = useState([]),
+      [viewDepartment, setViewDepartment] = useState({
+         dept_no: '',
+         dept_name: '',
+      }),
+      [departmentData, setDepartmentData] = useState([]),
       [dataFetched, setDataFetched] = useState(false),
       [reset, setReset] = useState(false),
-      [lastName, setLastName] = useState(''),
-      [empData, setEmpData] = useState({ departments: [], salaries: [] }),
-      [empData2, setEmpData2] = useState({}),
       [msgArr, setMsgArr] = useState(obj),
-      [cardClass, setCardClass] = useState('displayNone'),
+      [cardClass, setCardClass] = useState('displayBlock'),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
    const [state, setState] = useState({ columns: [], data: [] });
 
-   const handleClose = () => {
-      setOpen(false);
-   };
-
-   const clearUndefined = (str) => {
-      if (str === undefined || str === '') {
-         str = 'NA';
-         return str;
-      }
-   };
-   const getDetailsStart = (id) => {
-      if (id !== undefined) {
+   const getDeptDetailsStart = (dept_no) => {
+      if (dept_no !== undefined) {
          if (cardClass === 'animFadeInFast' || cardClass === 'displayBlock') {
             setCardClass('animFadeOutFast');
          }
-         console.log('just set found out');
-         getDetails(id, token).then((data) => {
+         getDeptDetails(dept_no, token).then((data) => {
             setTimeout(() => {
                setCardClass('animFadeInFast');
+               setDataByDepartment(data);
+               //console.log(data);
             }, 300);
-            setEmpData2(data);
          });
       }
-   };
-   const addDepartmentStart = () => {
-      //setSpinnerClass('displayBlock');
-      setMsgArr(
-         cubeMsgNext('Adding Department to Database...', 'success', msgArr)
-      );
-      setCubeWrapperAnim(
-         msgArr[msgArr.findIndex((el) => el.current === true)].anim
-      );
-
-      setFirstName(clearUndefined(firstName));
-      setLastName(clearUndefined(lastName));
-      setBirth_date(clearUndefined(birth_date));
-      setHire_date(clearUndefined(hire_date));
-
-      var id = uuid();
-      var newDepartment = {
-         uuid: id,
-         first_name: firstName,
-         last_name: lastName,
-         birth_date: birth_date,
-         gender: gender,
-         hire_date: hire_date,
-      };
-      setOpen(false);
-      addDepartment(newDepartment, token).then((res) => {
-         getDepartments(token).then((data) => {
-            console.log(data);
-            setDepartments(data);
-            setReset(!reset);
-         });
-
-         setBirth_date(''); // clear values
-         setHire_date('');
-         setGender('');
-         setFirstName('');
-         setLastName('');
-         //setSpinnerClass('displayNone');
-         setMsgArr(
-            cubeMsgNext('New entry added to database', 'success', msgArr)
-         );
-         // find number of next up slide and then update state of Cube Wrapper to trigger roll
-         setCubeWrapperAnim(
-            msgArr[msgArr.findIndex((el) => el.current === true)].anim
-         );
-      });
    };
 
    useEffect(() => {
@@ -130,16 +65,13 @@ export const Departments = () => {
                setCubeWrapperAnim(
                   msgArr[msgArr.findIndex((el) => el.current === true)].anim
                );
-               setDepartments(data);
+
+               setDepartmentData(data);
 
                setState({
                   columns: [
-                     { title: 'Emp#', field: 'emp_no' },
-                     { title: 'DOB', field: 'birth_date' },
-                     { title: 'First Name', field: 'first_name' },
-                     { title: 'Last Name', field: 'last_name' },
-                     { title: 'G', field: 'gender' },
-                     { title: 'H-Date', field: 'hire_date' },
+                     { title: 'Department #', field: 'dept_no' },
+                     { title: 'Department Name', field: 'dept_name' },
                   ],
                   data: data,
                });
@@ -151,7 +83,7 @@ export const Departments = () => {
             alert('no token found');
             window.location.href = '/';
          });
-   }, [reset, msgArr]);
+   }, [reset, msgArr, dataByDepartment]);
 
    return (
       <div id='main' className='body'>
@@ -170,84 +102,15 @@ export const Departments = () => {
          <div style={{ padding: 15, display: 'block' }}></div>
 
          <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
-            <DepartmentCard empData={empData} empData2={empData2} />
+            <DepartmentCard
+               viewDepartment={viewDepartment}
+               dataByDepartment={dataByDepartment}
+            />
          </div>
 
-         <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby='form-dialog-title'
-         >
-            <DialogTitle id='form-dialog-title'>Subscribe</DialogTitle>
-            <DialogContent>
-               <DialogContentText>Add New Department</DialogContentText>
-               <TextField
-                  autoFocus
-                  margin='dense'
-                  defaultValue={birth_date}
-                  id='birth_date'
-                  label='Birthdate'
-                  type='birth_date'
-                  fullWidth
-                  onChange={(event) => setBirth_date(event.target.value)}
-               />
-               <TextField
-                  margin='dense'
-                  id='firstName'
-                  label='First Name'
-                  type='text'
-                  defaultValue={firstName}
-                  fullWidth
-                  onChange={(event) => setFirstName(event.target.value)}
-               />
-               <TextField
-                  margin='dense'
-                  id='lastName'
-                  label='Last Name'
-                  defaultValue={lastName}
-                  type='text'
-                  fullWidth
-                  onChange={(event) => setLastName(event.target.value)}
-               />
-               <TextField
-                  margin='dense'
-                  id='gender'
-                  label='gender'
-                  type='gender'
-                  defaultValue={gender}
-                  fullWidth
-                  onChange={(event) => setGender(event.target.value)}
-               />
-               <TextField
-                  margin='dense'
-                  id='hire_date'
-                  label='hire_date'
-                  type='hire_date'
-                  defaultValue={hire_date}
-                  fullWidth
-                  onChange={(event) => setHire_date(event.target.value)}
-               />
-            </DialogContent>
-            <DialogActions>
-               <Button
-                  onClick={handleClose}
-                  color='primary'
-                  variant='contained'
-               >
-                  Cancel
-               </Button>
-               <Button
-                  onClick={addDepartmentStart}
-                  color='primary'
-                  variant='contained'
-               >
-                  Save New Department
-               </Button>
-            </DialogActions>
-         </Dialog>
          <br />
          <br />
-         <div style={{ paddingBottom: 15 }} class={alert2Class}>
+         <div style={{ paddingBottom: 15 }} className={alert2Class}>
             <Alert severity={alert2Severity} variant='filled'>
                {alert2Msg}
             </Alert>
@@ -257,17 +120,17 @@ export const Departments = () => {
             <CircularProgress />
          ) : (
             <DepartmentsTable
-               data={departments}
+               departmentData={departmentData}
                state={state}
                msgArr={msgArr}
                token={token}
                setMsgArr={setMsgArr}
+               setViewDepartment={setViewDepartment}
                setCubeWrapperAnim={setCubeWrapperAnim}
                setState={setState}
                setCardClass={setCardClass}
-               setEmpData={setEmpData}
                cubeMsgNext={cubeMsgNext}
-               getDetailsStart={getDetailsStart}
+               getDeptDetailsStart={getDeptDetailsStart}
                setAlert2Class={setAlert2Class}
                setAlert2Msg={setAlert2Msg}
                setAlert2Severity={setAlert2Severity}

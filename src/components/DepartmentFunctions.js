@@ -76,7 +76,7 @@ export const getDepartments = async (theToken) => {
          token: theToken,
          caller: 'DepartmentFunctions.getDepartment',
       });
-      //console.log(res.data)
+      console.log(res.data);
       return res.data;
    } catch (err) {
       console.log(
@@ -85,14 +85,17 @@ export const getDepartments = async (theToken) => {
       return '++Error Loc 07';
    }
 };
-export const getDetails = async (id, theToken) => {
+export const getDeptDetails = async (dept_no, theToken) => {
    try {
-      const res = await axios.post(serverPath + '/department/get_details', {
-         id,
-         token: theToken,
-         caller: 'DepartmentFunctions.details',
-      });
-      console.log(res.data);
+      const res = await axios.post(
+         serverPath + '/department/get_employees_by_dept',
+         {
+            dept_no,
+            token: theToken,
+            caller: 'DepartmentFunctions.getDetails',
+         }
+      );
+      //console.log(res.data);
       return res.data;
    } catch (err) {
       console.log('ClientSide Error @ DepartmentFunctions.getDetails ' + err);

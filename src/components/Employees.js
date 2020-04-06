@@ -38,6 +38,7 @@ export const Employees = () => {
       [cardClass, setCardClass] = useState('displayNone'),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
+   // state is used by material table
    const [state, setState] = useState({ columns: [], data: [] });
 
    const handleClose = () => {
@@ -243,7 +244,7 @@ export const Employees = () => {
          </Dialog>
          <br />
          <br />
-         <div style={{ paddingBottom: 15 }} class={alert2Class}>
+         <div style={{ paddingBottom: 15 }} className={alert2Class}>
             <Alert severity={alert2Severity} variant='filled'>
                {alert2Msg}
             </Alert>

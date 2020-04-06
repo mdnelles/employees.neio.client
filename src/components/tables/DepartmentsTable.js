@@ -13,8 +13,8 @@ export const DepartmentsTable = (props) => {
                   onClick: (event, rowData) => {
                      // Do save operation
                      props.setAlert2Class('displayNone');
-                     props.setEmpData(rowData);
-                     props.getDetailsStart(rowData.emp_no);
+                     props.setViewDepartment(rowData);
+                     props.getDeptDetailsStart(rowData.dept_no);
                      props.setMsgArr(
                         props.cubeMsgNext(
                            'Viewing Department ' +
