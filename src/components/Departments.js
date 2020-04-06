@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-   getDepartments,
-   addDepartment,
-   getDeptDetails,
-} from './DepartmentFunctions';
+import { getDepartments, getDeptDetails } from './DepartmentFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
 

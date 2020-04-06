@@ -88,8 +88,11 @@ export const DepartmentCard = (props) => {
                      </Avatar>
                   }
                   action={
-                     <IconButton aria-label='settings'>
-                        <CloseIcon onClick={props.closeCard} />
+                     <IconButton
+                        aria-label='settings'
+                        onClick={props.closeCard}
+                     >
+                        <CloseIcon />
                      </IconButton>
                   }
                   title={props.viewDepartment.dept_name}
@@ -125,7 +128,7 @@ export const DepartmentCard = (props) => {
                                           hover
                                           role='checkbox'
                                           tabIndex={-1}
-                                          key={row.code}
+                                          key={uuid()}
                                        >
                                           {columns.map((column) => {
                                              const value = row[column.id];
