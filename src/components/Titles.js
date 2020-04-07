@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getTitles } from './TitleFunctions';
 import localForage from 'localforage';
-import uuid from 'uuid';
 
 import Alert from '@material-ui/lab/Alert';
 import { cubeMsgNext, obj } from './_sharedFunctions';
@@ -57,10 +56,7 @@ export const Titles = () => {
                setTitleData(data);
 
                setState({
-                  columns: [
-                     { title: 'Title #', field: 'dept_no' },
-                     { title: 'Title Name', field: 'dept_name' },
-                  ],
+                  columns: [{ title: 'Title Name', field: 'title' }],
                   data: data,
                });
             });
@@ -115,13 +111,6 @@ export const Titles = () => {
                setAlert2Severity={setAlert2Severity}
             />
          )}
-         <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
-            <TitleCard
-               viewTitle={viewTitle}
-               dataByTitle={dataByTitle}
-               closeCard={closeCard}
-            />
-         </div>
       </div>
    );
 };

@@ -9,12 +9,16 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
+import { logout } from '../UserFunctions';
+
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AccountTreeRoundedIcon from '@material-ui/icons/AccountTreeRounded';
 import AssignmentIndRoundedIcon from '@material-ui/icons/AssignmentIndRounded';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
+import Grid from '@material-ui/core/Grid';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -120,20 +124,35 @@ export default function MiniDrawer() {
             })}
          >
             <Toolbar>
-               <IconButton
-                  color='inherit'
-                  aria-label='open drawer'
-                  onClick={handleDrawerOpen}
-                  edge='start'
-                  className={clsx(classes.menuButton, {
-                     [classes.hide]: open,
-                  })}
-               >
-                  <MenuIcon />
-               </IconButton>
-               <Typography variant='h6' noWrap>
-                  Manage Employees App
-               </Typography>
+               <Grid item xs={1}>
+                  <IconButton
+                     color='inherit'
+                     aria-label='open drawer'
+                     onClick={handleDrawerOpen}
+                     edge='start'
+                     className={clsx(classes.menuButton, {
+                        [classes.hide]: open,
+                     })}
+                  >
+                     <MenuIcon />
+                  </IconButton>
+               </Grid>
+               <Grid item xs={5}>
+                  <Typography variant='h6' noWrap>
+                     Manage Employees App &nbsp;
+                     <span style={{ fontSize: '.8em', color: '#cccccc' }}>
+                        by @mdnelles
+                     </span>
+                  </Typography>
+               </Grid>
+
+               <Grid item xs={6}>
+                  <p align='right' style={{ padding: '0px', margin: '0px' }}>
+                     <IconButton aria-label='delete' onClick={logout}>
+                        <AccountCircleIcon style={{ fill: 'white' }} />
+                     </IconButton>
+                  </p>
+               </Grid>
             </Toolbar>
          </AppBar>
          <Drawer
