@@ -33,7 +33,7 @@ export const DeptManagersTable = (props) => {
                   },
                },
             ]}
-            title='Departments'
+            title='Departments (Managers)'
             columns={props.state.columns}
             data={props.state.data}
             editable={{
