@@ -102,15 +102,6 @@ export const Departments = () => {
                />
             </div>
          </div>
-         <div style={{ padding: 15, display: 'block' }}></div>
-
-         <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
-            <DepartmentCard
-               viewDepartment={viewDepartment}
-               dataByDepartment={dataByDepartment}
-               closeCard={closeCard}
-            />
-         </div>
 
          <br />
          <br />
@@ -140,6 +131,13 @@ export const Departments = () => {
                setAlert2Severity={setAlert2Severity}
             />
          )}
+         <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
+            <DepartmentCard
+               viewDepartment={viewDepartment}
+               dataByDepartment={dataByDepartment}
+               closeCard={closeCard}
+            />
+         </div>
       </div>
    );
 };

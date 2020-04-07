@@ -168,15 +168,6 @@ export const Employees = () => {
                />
             </div>
          </div>
-         <div style={{ padding: 15, display: 'block' }}></div>
-
-         <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
-            <EmployeeCard
-               empData={empData}
-               empData2={empData2}
-               closeCard={closeCard}
-            />
-         </div>
 
          <Dialog
             open={open}
@@ -278,6 +269,13 @@ export const Employees = () => {
                setAlert2Severity={setAlert2Severity}
             />
          )}
+         <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
+            <EmployeeCard
+               empData={empData}
+               empData2={empData2}
+               closeCard={closeCard}
+            />
+         </div>
       </div>
    );
 };

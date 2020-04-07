@@ -108,14 +108,6 @@ export const DeptManager = () => {
          </div>
          <div style={{ padding: 15, display: 'block' }}></div>
 
-         <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
-            <DepartmentCard
-               viewDepartment={viewDepartment}
-               dataByDepartment={dataByDepartment}
-               closeCard={closeCard}
-            />
-         </div>
-
          <br />
          <br />
          <div style={{ paddingBottom: 15 }} className={alert2Class}>
@@ -144,6 +136,13 @@ export const DeptManager = () => {
                setAlert2Severity={setAlert2Severity}
             />
          )}
+         <div className={cardClass} style={{ marginTop: 15, marginBottom: 2 }}>
+            <DepartmentCard
+               viewDepartment={viewDepartment}
+               dataByDepartment={dataByDepartment}
+               closeCard={closeCard}
+            />
+         </div>
       </div>
    );
 };
