@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 
 import CloseIcon from '@material-ui/icons/Close';
-//import { SalariesTable } from './tables/SalariesTable';
+import { SalaryTable } from './tables/SalaryTable';
 //import { SalarieCard } from './SalarieCard';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -31,6 +31,40 @@ const useStyles = makeStyles({
    },
 });
 
+const tableColumns = [
+   {
+      title: 'Salary',
+      id: 'any_salary',
+      ignore: 'c1',
+      minWidth: 100,
+   },
+   {
+      title: 'First Name',
+      id: 'first_name',
+      ignore: 'c2',
+      minWidth: 100,
+   },
+   {
+      title: 'Last Name',
+      id: 'last_name',
+      ignore: 'c3',
+      minWidth: 100,
+   },
+   {
+      title: 'Employee #',
+      id: 'emp_no',
+      ignore: 'c4',
+      minWidth: 100,
+   },
+   { title: 'Start', id: 'any_start', ignore: 'c5', minWidth: 100 },
+   {
+      title: 'Finish',
+      id: 'any_finish',
+      ignore: 'c6',
+      minWidth: 100,
+   },
+];
+
 let salaryClass = [];
 for (let index = 10000; index <= 200000; index += 2500) {
    salaryClass.push(index);
@@ -45,29 +79,55 @@ export const Salaries = () => {
       [alert2Msg, setAlert2Msg] = useState(''),
       [alert2Class, setAlert2Class] = useState('displayBlock'),
       [token, setToken] = useState('no token'),
-      [dataBySalary, setDataBySalary] = useState(60000),
+      [salaryRange, setSalaryRange] = useState(60000),
       [dataFetched, setDataFetched] = useState(false),
       [reset, setReset] = useState(false),
       [msgArr, setMsgArr] = useState(obj),
+      [doRender, setDoRender] = useState(false),
       [open, setOpen] = React.useState(true),
       [cardClass, setCardClass] = useState('displayBlock'),
+      [rowsData, setRowsData] = useState({}),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
    const fetchSalaryClass = () => {
-      console.log('do specific query');
-      console.log('the salary range is ' + dataBySalary);
-      getSalaries(token, dataBySalary).then((data) => {
-         setDataFetched(data);
+      getSalaries(token, salaryRange).then((data) => {
+         setSalaryData(data);
+         setMsgArr(cubeMsgNext('Departments Loaded', 'success', msgArr));
+         setDataFetched(true);
+         setCubeWrapperAnim(
+            msgArr[msgArr.findIndex((el) => el.current === true)].anim
+         );
+
+         let formedData = data.map(
+            (a) =>
+               (a.any_salary =
+                  '' +
+                  a.any_salary
+                     .toString()
+                     .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'))
+         );
+
+         setRowsData(data);
+         setTimeout(() => {
+            setDoRender(!doRender);
+         }, 1000);
+
+         setTimeout(() => {
+            setDoRender(!doRender);
+         }, 2000);
+
+         console.log(data);
       });
    };
 
    const closeAlert2 = () => {
-      console.log('here in here');
       setAlert2Class('displayNone');
    };
-
+   const selChange = (event) => {
+      setSalaryRange(event.target.value);
+   };
    useEffect(() => {
-      if (salaryData === []) {
+      if (token === 'no token') {
          localForage
             .getItem('token')
             .then(function (theToken) {
@@ -80,7 +140,7 @@ export const Salaries = () => {
                window.location.href = '/';
             });
       }
-   }, []);
+   }, [doRender, rowsData]);
 
    return (
       <div id='main' className='body'>
@@ -119,18 +179,17 @@ export const Salaries = () => {
             </Alert>
          </div>
          <div style={{ display: 'block', padding: 20 }}></div>
-         <InputLabel id='demo-simple-select-label'>
+         <InputLabel id='salarySelect'>
             Select Salary Range (annually)
          </InputLabel>
          <Select
-            labelId='demo-simple-select-label'
-            id='demo-simple-select'
-            value={dataBySalary}
-            onChange={(event) => setDataBySalary(event.target.value)}
+            labelId='salarySelect'
             style={{ width: 300, marginRight: 25 }}
+            onChange={selChange}
+            value={salaryRange}
          >
             {salaryClass.map((aclass) => (
-               <MenuItem value={aclass} key={uuid()}>
+               <MenuItem value={aclass} key={aclass}>
                   ${aclass + ' - ' + (aclass + 2499)}
                </MenuItem>
             ))}
@@ -138,6 +197,21 @@ export const Salaries = () => {
          <Button variant='contained' color='primary' onClick={fetchSalaryClass}>
             Fetch Data
          </Button>
+         {/* /////////////////////////////////////////// */}
+         <SalaryTable
+            salaryData={salaryData}
+            tableColumns={tableColumns}
+            rowsData={rowsData}
+            msgArr={msgArr}
+            token={token}
+            setMsgArr={setMsgArr}
+            setCubeWrapperAnim={setCubeWrapperAnim}
+            setCardClass={setCardClass}
+            cubeMsgNext={cubeMsgNext}
+            setAlert2Class={setAlert2Class}
+            setAlert2Msg={setAlert2Msg}
+            setAlert2Severity={setAlert2Severity}
+         />
       </div>
    );
 };
