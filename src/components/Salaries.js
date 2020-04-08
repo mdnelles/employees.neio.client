@@ -37,6 +37,10 @@ const tableColumns = [
       id: 'any_salary',
       ignore: 'c1',
       minWidth: 100,
+      format: (value) =>
+         '$' +
+         value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,') +
+         '/yr',
    },
    {
       title: 'First Name',
@@ -66,7 +70,7 @@ const tableColumns = [
 ];
 
 let salaryClass = [];
-for (let index = 10000; index <= 200000; index += 2500) {
+for (let index = 37500; index <= 140000; index += 2500) {
    salaryClass.push(index);
 }
 const classChange = (event) => {};
@@ -74,8 +78,7 @@ const classChange = (event) => {};
 let i = 1000;
 export const Salaries = () => {
    const classes = useStyles();
-   const [salaryData, setSalaryData] = useState([]),
-      [alert2Severity, setAlert2Severity] = useState('warning'),
+   const [alert2Severity, setAlert2Severity] = useState('warning'),
       [alert2Msg, setAlert2Msg] = useState(''),
       [alert2Class, setAlert2Class] = useState('displayBlock'),
       [token, setToken] = useState('no token'),
@@ -91,32 +94,14 @@ export const Salaries = () => {
 
    const fetchSalaryClass = () => {
       getSalaries(token, salaryRange).then((data) => {
-         setSalaryData(data);
-         setMsgArr(cubeMsgNext('Departments Loaded', 'success', msgArr));
+         console.log('data just before setting the state');
+         console.log(data);
+         setRowsData(data);
+         setMsgArr(cubeMsgNext('Salary range loaded', 'success', msgArr));
          setDataFetched(true);
          setCubeWrapperAnim(
             msgArr[msgArr.findIndex((el) => el.current === true)].anim
          );
-
-         let formedData = data.map(
-            (a) =>
-               (a.any_salary =
-                  '' +
-                  a.any_salary
-                     .toString()
-                     .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'))
-         );
-
-         setRowsData(data);
-         setTimeout(() => {
-            setDoRender(!doRender);
-         }, 1000);
-
-         setTimeout(() => {
-            setDoRender(!doRender);
-         }, 2000);
-
-         console.log(data);
       });
    };
 
@@ -199,7 +184,6 @@ export const Salaries = () => {
          </Button>
          {/* /////////////////////////////////////////// */}
          <SalaryTable
-            salaryData={salaryData}
             tableColumns={tableColumns}
             rowsData={rowsData}
             msgArr={msgArr}

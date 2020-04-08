@@ -9,6 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import uuid from 'uuid';
+import _ from 'lodash';
 
 const useStyles = makeStyles({
    root: {
@@ -22,9 +23,6 @@ const useStyles = makeStyles({
 export const SalaryTable = (props) => {
    const classes = useStyles();
    const [page, setPage] = React.useState(0);
-   const [rows, setRows] = React.useState({});
-   const [columns, setColumns] = React.useState([]);
-   const [paint, setPaint] = React.useState(false);
    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
    const handleChangePage = (event, newPage) => {
@@ -36,45 +34,29 @@ export const SalaryTable = (props) => {
       setPage(0);
    };
 
-   React.useEffect(() => {
-      console.log('in use effect');
-      console.log(props.rowsData);
-      if (props.rowsData !== undefined) {
-         console.log('props.rowsData length');
-         console.log(props.rowsData.length);
-         if (props.rowsData.length > 1) {
-            console.log('inside');
-            setRows(props.rowsData);
-            setColumns(props.tableColumns);
-            if (paint === false) setPaint(true);
-         }
-      }
-   }, [paint]);
-
-   if (paint === false) {
-      console.log('paint === false');
-      console.log(props.rowsData);
+   if (_.isEmpty(props.rowsData)) {
+      console.log('_' + _.isEmpty(props.rowsData));
       return (
          <div>
             <br></br>Please select a salary range
          </div>
       );
    } else {
-      console.log('rows: ');
-      console.log(rows);
+      let rows = props.rowsData;
+      //let rows = props.rowsData;
       return (
-         <div>
+         <div style={{ paddingTop: 10 }}>
             <Paper className={classes.root}>
                <TableContainer className={classes.container}>
                   <Table stickyHeader aria-label='sticky table'>
                      <TableHead>
                         <TableRow>
-                           {columns.map((column) => (
+                           {props.tableColumns.map((column) => (
                               <TableCell
                                  key={column.id}
                                  style={{ minWidth: column.minWidth }}
                               >
-                                 {column.label}
+                                 {column.title}
                               </TableCell>
                            ))}
                         </TableRow>
@@ -93,12 +75,12 @@ export const SalaryTable = (props) => {
                                     tabIndex={-1}
                                     key={uuid()}
                                  >
-                                    {props.columns.map((column) => {
+                                    {props.tableColumns.map((column) => {
                                        const value = row[column.id];
                                        return (
                                           <TableCell
-                                             key={props.column.id}
-                                             align={props.column.align}
+                                             key={uuid()}
+                                             align={props.tableColumns.align}
                                           >
                                              {column.format &&
                                              typeof value === 'number'
