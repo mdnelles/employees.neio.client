@@ -32,28 +32,28 @@ import Popover from '@material-ui/core/Popover';
 
 const useStyles = makeStyles((theme) => ({
    root: {
-      maxWidth: 345
+      maxWidth: 345,
    },
    media: {
       height: 0,
-      paddingTop: '56.25%' // 16:9
+      paddingTop: '56.25%', // 16:9
    },
    expand: {
       transform: 'rotate(0deg)',
       marginLeft: 'auto',
       transition: theme.transitions.create('transform', {
-         duration: theme.transitions.duration.shortest
-      })
+         duration: theme.transitions.duration.shortest,
+      }),
    },
    expandOpen: {
-      transform: 'rotate(180deg)'
+      transform: 'rotate(180deg)',
    },
    avatar: {
-      backgroundColor: red[500]
+      backgroundColor: red[500],
    },
    typography: {
-      padding: theme.spacing(2)
-   }
+      padding: theme.spacing(2),
+   },
 }));
 
 function ListItemLink(props) {
@@ -63,8 +63,8 @@ function ListItemLink(props) {
 export const Landing = () => {
    const classes = useStyles();
 
-   const [email, setEmail] = useState('mxnelles@gmail.com'),
-      [password, setPassword] = useState(''),
+   const [email, setEmail] = useState('demo'),
+      [password, setPassword] = useState('demo'),
       [spinnerClass, setSpinnerClass] = useState('displayNone'),
       [expanded, setExpanded] = React.useState(false),
       [msgArr, setMsgArr] = useState(obj),
@@ -95,7 +95,7 @@ export const Landing = () => {
 
       const user = {
          email: email,
-         password: password
+         password: password,
       };
 
       if (
@@ -128,7 +128,7 @@ export const Landing = () => {
                   localForage.setItem('token', res);
 
                   setTimeout(() => {
-                     window.location.href = '/home';
+                     window.location.href = '/employees';
                   }, 350);
                } else {
                   console.log('+++ unhandled error here: ' + __filename);
@@ -179,12 +179,12 @@ export const Landing = () => {
    const aprops = useSpring({
       config: { duration: 700 },
       from: {
-         opacity: 0
+         opacity: 0,
       },
       to: {
-         opacity: 1
+         opacity: 1,
       },
-      delay: 100
+      delay: 100,
    });
 
    return (
@@ -265,11 +265,11 @@ export const Landing = () => {
                         onClose={popHandleClose}
                         anchorOrigin={{
                            vertical: 'bottom',
-                           horizontal: 'center'
+                           horizontal: 'center',
                         }}
                         transformOrigin={{
                            vertical: 'top',
-                           horizontal: 'center'
+                           horizontal: 'center',
                         }}
                      >
                         <Typography className={classes.typography}>
@@ -283,7 +283,7 @@ export const Landing = () => {
 
                      <IconButton
                         className={clsx(classes.expand, {
-                           [classes.expandOpen]: expanded
+                           [classes.expandOpen]: expanded,
                         })}
                         onClick={handleExpandClick}
                         aria-expanded={expanded}

@@ -237,14 +237,7 @@ export default function MiniDrawer() {
                   </ListItemAvatar>
                   <ListItemText primary='Admin Users' />
                </ListItem>
-               <ListItem button onClick={() => bClick('settings')}>
-                  <ListItemAvatar>
-                     <SettingsRoundedIcon
-                        style={{ fontSize: fs, fill: icolor }}
-                     />
-                  </ListItemAvatar>
-                  <ListItemText primary='Settings' />
-               </ListItem>
+
                <ListItem button onClick={() => bClick('logs')}>
                   <ListItemAvatar>
                      <StorageIcon style={{ fontSize: fs, fill: icolor }} />
