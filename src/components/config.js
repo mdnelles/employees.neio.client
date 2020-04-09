@@ -1,4 +1,4 @@
 module.export = global.config = {
-   routerPath: '/ss',
-   devPath: 'http://localhost:5007'
+   routerPath: '/es',
+   devPath: 'http://localhost:5007',
 };

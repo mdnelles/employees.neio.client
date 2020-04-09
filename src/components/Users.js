@@ -217,7 +217,7 @@ export const Users = () => {
          <br />
 
          <MaterialTable
-            title='Editable Example'
+            title='App Admin Users'
             columns={state.columns}
             data={state.data}
             editable={{
@@ -260,22 +260,42 @@ export const Users = () => {
                   }),
                onRowDelete: (oldData) =>
                   new Promise((resolve) => {
-                     //setTimeout(() => {
-                     removeUser(oldData.id, token).then(() => {
+                     console.log('Old Data');
+                     console.log(oldData.email);
+                     if (
+                        oldData.email === 'mxnelles@gmail.com' ||
+                        oldData.email === 'demo'
+                     ) {
                         setMsgArr(
-                           cubeMsgNext('Removed user', 'Success', msgArr)
+                           cubeMsgNext(
+                              'That admin account can not be deleted',
+                              'warning',
+                              msgArr
+                           )
                         );
+                        resolve();
                         setCubeWrapperAnim(
                            msgArr[msgArr.findIndex((el) => el.current === true)]
                               .anim
                         );
-                        resolve();
-                        setState((prevState) => {
-                           const data = [...prevState.data];
-                           data.splice(data.indexOf(oldData), 1);
-                           return { ...prevState, data };
+                     } else {
+                        removeUser(oldData.id, token).then(() => {
+                           setMsgArr(
+                              cubeMsgNext('Removed user', 'Success', msgArr)
+                           );
+                           setCubeWrapperAnim(
+                              msgArr[
+                                 msgArr.findIndex((el) => el.current === true)
+                              ].anim
+                           );
+                           resolve();
+                           setState((prevState) => {
+                              const data = [...prevState.data];
+                              data.splice(data.indexOf(oldData), 1);
+                              return { ...prevState, data };
+                           });
                         });
-                     });
+                     }
                   }),
             }}
          />

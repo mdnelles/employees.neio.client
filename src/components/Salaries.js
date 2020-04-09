@@ -1,28 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { getUsers, removeUser, addUser } from './UserFunctions';
 import { getSalaries } from './SalariesFunctions';
 import localForage from 'localforage';
-import uuid from 'uuid';
-
-import { Msg } from './widgets/Msg';
 
 import Alert from '@material-ui/lab/Alert';
 import { cubeMsgNext, obj } from './_sharedFunctions';
 import { CubeMsg } from './3d/CubeMsg';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 
 import CloseIcon from '@material-ui/icons/Close';
 import { SalaryTable } from './tables/SalaryTable';
-//import { SalarieCard } from './SalarieCard';
 
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles({
@@ -73,9 +65,7 @@ let salaryClass = [];
 for (let index = 37500; index <= 140000; index += 2500) {
    salaryClass.push(index);
 }
-const classChange = (event) => {};
 
-let i = 1000;
 export const Salaries = () => {
    const classes = useStyles();
    const [alert2Severity, setAlert2Severity] = useState('warning'),

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getDeptManagers } from './DeptManagerFunctions';
 import { getDepartments, getDeptDetails } from './DepartmentFunctions';
 import localForage from 'localforage';
-import uuid from 'uuid';
+
+import $ from 'jquery';
 
 import Alert from '@material-ui/lab/Alert';
 import { cubeMsgNext, obj } from './_sharedFunctions';
@@ -41,11 +42,21 @@ export const DeptManager = () => {
             setTimeout(() => {
                setCardClass('animFadeInFast');
                setDataByDepartment(data);
-               //console.log(data);
+               scrollSmoothToBottom();
             }, 300);
          });
       }
    };
+
+   let scrollingElement = document.scrollingElement || document.body;
+   function scrollSmoothToBottom() {
+      $(scrollingElement).animate(
+         {
+            scrollTop: document.body.scrollHeight,
+         },
+         1000
+      );
+   }
 
    const closeCard = () => {
       setCardClass('animFadeOutFast');

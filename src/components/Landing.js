@@ -78,7 +78,11 @@ export const Landing = () => {
    const helpClick = (event) => {
       setPopAnchorEl(event.currentTarget);
       setMsgArr(
-         cubeMsgNext('Use the password `nelles` to login', 'success', msgArr)
+         cubeMsgNext(
+            'Use the username/password `demo` to login',
+            'success',
+            msgArr
+         )
       );
       // find number of next up slide and then update state of Cube Wrapper to trigger roll
       setCubeWrapperAnim(
@@ -224,7 +228,7 @@ export const Landing = () => {
                      <form>
                         <div className='center-inner' style={{ padding: 10 }}>
                            <TextField
-                              label='email'
+                              label='email / username'
                               ariant='outlined'
                               defaultValue={email}
                               onChange={(event) => setEmail(event.target.value)}
@@ -340,17 +344,6 @@ export const Landing = () => {
                                  />
                               </ListItemAvatar>
                               <ListItemText primary='MySQL' />
-                           </ListItem>
-                           <ListItem button disableGutters={true}>
-                              <ListItemLink href='https://github.com/mdnelles'>
-                                 <ListItemAvatar>
-                                    <Avatar
-                                       alt='Github'
-                                       src='/img/icon/_github.png'
-                                    />
-                                 </ListItemAvatar>
-                                 <ListItemText primary='GitHub' />
-                              </ListItemLink>
                            </ListItem>
                         </List>
                      </CardContent>

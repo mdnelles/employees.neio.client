@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getDepartments, getDeptDetails } from './DepartmentFunctions';
 import localForage from 'localforage';
-import uuid from 'uuid';
+
+import $ from 'jquery';
 
 import Alert from '@material-ui/lab/Alert';
 import { cubeMsgNext, obj } from './_sharedFunctions';
@@ -12,8 +13,7 @@ import { DepartmentCard } from './DepartmentCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const Departments = () => {
-   const [open, setOpen] = useState(false),
-      [alert2Severity, setAlert2Severity] = useState('warning'),
+   const [alert2Severity, setAlert2Severity] = useState('warning'),
       [alert2Msg, setAlert2Msg] = useState(''),
       [alert2Class, setAlert2Class] = useState('displayNone'),
       [token, setToken] = useState('no token'),
@@ -24,7 +24,6 @@ export const Departments = () => {
       }),
       [departmentData, setDepartmentData] = useState([]),
       [dataFetched, setDataFetched] = useState(false),
-      [reset, setReset] = useState(false),
       [msgArr, setMsgArr] = useState(obj),
       [cardClass, setCardClass] = useState('displayBlock'),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
@@ -40,12 +39,20 @@ export const Departments = () => {
             setTimeout(() => {
                setCardClass('animFadeInFast');
                setDataByDepartment(data);
-               //console.log(data);
+               scrollSmoothToBottom();
             }, 300);
          });
       }
    };
-
+   let scrollingElement = document.scrollingElement || document.body;
+   function scrollSmoothToBottom() {
+      $(scrollingElement).animate(
+         {
+            scrollTop: document.body.scrollHeight,
+         },
+         700
+      );
+   }
    const closeCard = () => {
       setCardClass('animFadeOutFast');
       setTimeout(() => {
@@ -86,7 +93,7 @@ export const Departments = () => {
             alert('no token found');
             window.location.href = '/';
          });
-   }, [reset, msgArr, dataByDepartment]);
+   }, [msgArr, dataByDepartment]);
 
    return (
       <div id='main' className='body'>

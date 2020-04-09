@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getEmployees, addEmployee, getDetails } from './EmployeeFunctions';
 import localForage from 'localforage';
 import uuid from 'uuid';
+import $ from 'jquery';
 
 import Alert from '@material-ui/lab/Alert';
 import { cubeMsgNext, obj } from './_sharedFunctions';
@@ -45,6 +46,16 @@ export const Employees = () => {
       setOpen(false);
    };
 
+   let scrollingElement = document.scrollingElement || document.body;
+   function scrollSmoothToBottom() {
+      $(scrollingElement).animate(
+         {
+            scrollTop: document.body.scrollHeight,
+         },
+         1000
+      );
+   }
+
    const clearUndefined = (str) => {
       if (str === undefined || str === '') {
          str = 'NA';
@@ -65,7 +76,9 @@ export const Employees = () => {
          getDetails(id, token).then((data) => {
             setTimeout(() => {
                setCardClass('animFadeInFast');
+               scrollSmoothToBottom();
             }, 300);
+
             setEmpData2(data);
          });
       }

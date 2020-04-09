@@ -109,28 +109,3 @@ export const SalaryTable = (props) => {
       );
    }
 };
-
-{
-   /*
-props.setAlert2Class('displayNone');
-                     props.setViewSalaries(rowData);
-                     props.getDeptDetailsStart(rowData.dept_no);
-                     props.setMsgArr(
-                        props.cubeMsgNext(
-                           'Viewing Salaries ' +
-                              rowData.first_name +
-                              ' ' +
-                              rowData.last_name,
-                           'info',
-                           props.msgArr
-                        )
-                     );
-                     props.setCubeWrapperAnim(
-                        props.msgArr[
-                           props.msgArr.findIndex((el) => el.current === true)
-                        ].anim
-                     );
-                     
-   }
-*/
-}

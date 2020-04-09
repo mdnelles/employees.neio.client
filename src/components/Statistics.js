@@ -1,24 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { getUsers, removeUser, addUser } from './UserFunctions';
 import localForage from 'localforage';
-import uuid from 'uuid';
 
-import { Msg } from './widgets/Msg';
-
-import Alert from '@material-ui/lab/Alert';
 import { cubeMsgNext, obj } from './_sharedFunctions';
+
 import { CubeMsg } from './3d/CubeMsg';
-
-import IconButton from '@material-ui/core/IconButton';
-
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 
 const StyledTableCell = withStyles((theme) => ({
    head: {
@@ -105,22 +98,15 @@ const useStyles = makeStyles({
    table: {
       minWidth: 700,
    },
+   media: {
+      paddingTop: 1,
+      maxWidth: 800,
+   },
 });
 
 export const Statistics = () => {
    const classes = useStyles();
-   const [alert2Severity, setAlert2Severity] = useState('warning'),
-      [alert2Msg, setAlert2Msg] = useState(''),
-      [alert2Class, setAlert2Class] = useState('displayBlock'),
-      [token, setToken] = useState('no token'),
-      [salaryRange, setSalaryRange] = useState(60000),
-      [dataFetched, setDataFetched] = useState(false),
-      [reset, setReset] = useState(false),
-      [msgArr, setMsgArr] = useState(obj),
-      [doRender, setDoRender] = useState(false),
-      [open, setOpen] = React.useState(true),
-      [cardClass, setCardClass] = useState('displayBlock'),
-      [rowsData, setRowsData] = useState({}),
+   const [msgArr, setMsgArr] = useState(obj),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
    useEffect(() => {
@@ -128,7 +114,10 @@ export const Statistics = () => {
       localForage
          .getItem('token')
          .then(function (theToken) {
-            setToken(theToken);
+            setMsgArr(cubeMsgNext('Stats and Schema loaded', 'info', msgArr));
+            setCubeWrapperAnim(
+               msgArr[msgArr.findIndex((el) => el.current === true)].anim
+            );
          })
          .catch(function (err) {
             // This code runs if there were any errors
@@ -136,7 +125,7 @@ export const Statistics = () => {
             alert('no token found');
             window.location.href = '/';
          });
-   }, []);
+   }, [msgArr]);
 
    return (
       <div id='main' className='body'>
@@ -153,7 +142,7 @@ export const Statistics = () => {
             </div>
          </div>
          <div style={{ display: 'block', padding: 20 }}></div>
-         <div className={alert2Class}></div>
+         <div className='displayBlock'></div>
          <div style={{ display: 'block', padding: 20 }}></div>
          <TableContainer component={Paper}>
             <Table className={classes.table} aria-label='customized table'>
@@ -189,6 +178,14 @@ export const Statistics = () => {
                </TableBody>
             </Table>
          </TableContainer>
+         <div style={{ padding: 10, display: 'block' }} />
+         <p align='center'>
+            <img
+               src='/img/employees-schema.png'
+               alt='recipe thumbnail'
+               style={{ maxWidth: '100%', height: 'auto' }}
+            />
+         </p>
       </div>
    );
 };

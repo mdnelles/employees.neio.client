@@ -25,7 +25,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import LocalAtmRoundedIcon from '@material-ui/icons/LocalAtmRounded';
 import MenuIcon from '@material-ui/icons/Menu';
 import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
-import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded';
 import StarsRoundedIcon from '@material-ui/icons/StarsRounded';
 import StorageIcon from '@material-ui/icons/Storage';
 import SupervisorAccountRoundedIcon from '@material-ui/icons/SupervisorAccountRounded';
