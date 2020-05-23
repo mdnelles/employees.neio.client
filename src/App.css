@@ -1,7 +1,7 @@
 body {
    background-color: #eeeeee;
-   font-family: Ubuntu, 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
-      'Lucida Sans', Arial, sans-serif;
+   font-family: Ubuntu, "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
 }
 
 .App-logo {
@@ -136,7 +136,7 @@ body {
    width: 100%;
 }
 .lgBG {
-   background-color: '#aaaaaa';
+   background-color: "#aaaaaa";
    border-radius: 3px;
 }
 .gridItem {
@@ -646,7 +646,7 @@ body {
 /* /////// End k3d objects ////// */
 .cubeWrapper {
    /* for login page */
-   width: 345px;
+   width: 305px;
    height: 76px;
    top: 0px;
    animation-fill-mode: forwards;
@@ -676,5 +676,5 @@ body {
    -webkit-perspective: 800px;
    perspective: 800px;
    position: absolute;
-   min-width: 365px;
+   min-width: 325px;
 }

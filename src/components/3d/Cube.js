@@ -1,5 +1,5 @@
-import React from 'react';
-import { CubeSide } from './CubeSide';
+import React from "react";
+import { CubeSide } from "./CubeSide";
 //import { Msg } from './widgets/Msg';
 
 export const Cube = (props) => {
