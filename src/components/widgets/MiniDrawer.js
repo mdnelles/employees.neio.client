@@ -1,43 +1,43 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import React from "react";
+import clsx from "clsx";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 
-import { logout } from '../UserFunctions';
+import { logout } from "../UserFunctions";
 
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import AccountTreeRoundedIcon from '@material-ui/icons/AccountTreeRounded';
-import AssignmentIndRoundedIcon from '@material-ui/icons/AssignmentIndRounded';
-import IconButton from '@material-ui/core/IconButton';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
-import Grid from '@material-ui/core/Grid';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import LocalAtmRoundedIcon from '@material-ui/icons/LocalAtmRounded';
-import MenuIcon from '@material-ui/icons/Menu';
-import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
-import StarsRoundedIcon from '@material-ui/icons/StarsRounded';
-import StorageIcon from '@material-ui/icons/Storage';
-import SupervisorAccountRoundedIcon from '@material-ui/icons/SupervisorAccountRounded';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AccountTreeRoundedIcon from "@material-ui/icons/AccountTreeRounded";
+import AssignmentIndRoundedIcon from "@material-ui/icons/AssignmentIndRounded";
+import IconButton from "@material-ui/core/IconButton";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import EqualizerRoundedIcon from "@material-ui/icons/EqualizerRounded";
+import Grid from "@material-ui/core/Grid";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import LocalAtmRoundedIcon from "@material-ui/icons/LocalAtmRounded";
+import MenuIcon from "@material-ui/icons/Menu";
+import PersonRoundedIcon from "@material-ui/icons/PersonRounded";
+import StarsRoundedIcon from "@material-ui/icons/StarsRounded";
+import StorageIcon from "@material-ui/icons/Storage";
+import SupervisorAccountRoundedIcon from "@material-ui/icons/SupervisorAccountRounded";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
    root: {
-      display: 'flex',
+      display: "flex",
    },
    appBar: {
       zIndex: theme.zIndex.drawer + 1,
-      transition: theme.transitions.create(['width', 'margin'], {
+      transition: theme.transitions.create(["width", "margin"], {
          easing: theme.transitions.easing.sharp,
          duration: theme.transitions.duration.leavingScreen,
       }),
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
    appBarShift: {
       marginLeft: drawerWidth,
       width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(['width', 'margin'], {
+      transition: theme.transitions.create(["width", "margin"], {
          easing: theme.transitions.easing.sharp,
          duration: theme.transitions.duration.enteringScreen,
       }),
@@ -54,35 +54,35 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 36,
    },
    hide: {
-      display: 'none',
+      display: "none",
    },
    drawer: {
       width: drawerWidth,
       flexShrink: 0,
-      whiteSpace: 'nowrap',
+      whiteSpace: "nowrap",
    },
    drawerOpen: {
       width: drawerWidth,
-      transition: theme.transitions.create('width', {
+      transition: theme.transitions.create("width", {
          easing: theme.transitions.easing.sharp,
          duration: theme.transitions.duration.enteringScreen,
       }),
    },
    drawerClose: {
-      transition: theme.transitions.create('width', {
+      transition: theme.transitions.create("width", {
          easing: theme.transitions.easing.sharp,
          duration: theme.transitions.duration.leavingScreen,
       }),
-      overflowX: 'hidden',
+      overflowX: "hidden",
       width: theme.spacing(7) + 1,
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up("sm")]: {
          width: theme.spacing(9) + 1,
       },
    },
    toolbar: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-end",
       padding: theme.spacing(0, 1),
       // necessary for content to be below app bar
       ...theme.mixins.toolbar,
@@ -103,15 +103,15 @@ export default function MiniDrawer() {
    };
    const bClick = (link) => {
       setTimeout(() => {
-         window.location.href = '/' + link;
+         window.location.href = "/" + link;
       }, 500);
    };
    const handleDrawerClose = () => {
       setOpen(false);
    };
 
-   const icolor = '#444444';
-   const fs = '30px';
+   const icolor = "#444444";
+   const fs = "30px";
 
    return (
       <div className={classes.root}>
@@ -139,16 +139,19 @@ export default function MiniDrawer() {
                <Grid item xs={5}>
                   <Typography variant='h6' noWrap>
                      Manage Employees App &nbsp;
-                     <span style={{ fontSize: '.8em', color: '#cccccc' }}>
+                     <span style={{ fontSize: ".8em", color: "#cccccc" }}>
                         by @mdnelles
                      </span>
                   </Typography>
                </Grid>
 
                <Grid item xs={6}>
-                  <p align='right' style={{ padding: '0px', margin: '0px' }}>
+                  <p
+                     align='right'
+                     style={{ padding: "0px", marginRight: "20px" }}
+                  >
                      <IconButton aria-label='delete' onClick={logout}>
-                        <AccountCircleIcon style={{ fill: 'white' }} />
+                        <AccountCircleIcon style={{ fill: "white" }} />
                      </IconButton>
                   </p>
                </Grid>
@@ -169,7 +172,7 @@ export default function MiniDrawer() {
          >
             <div className={classes.toolbar}>
                <IconButton onClick={handleDrawerClose}>
-                  {theme.direction === 'rtl' ? (
+                  {theme.direction === "rtl" ? (
                      <ChevronRightIcon />
                   ) : (
                      <ChevronLeftIcon />
@@ -178,7 +181,7 @@ export default function MiniDrawer() {
             </div>
             <Divider />
             <List component='nav' aria-label='application stack'>
-               <ListItem button onClick={() => bClick('employees')}>
+               <ListItem button onClick={() => bClick("employees")}>
                   <ListItemAvatar>
                      <PersonRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -186,7 +189,7 @@ export default function MiniDrawer() {
                   </ListItemAvatar>
                   <ListItemText primary='Employees' />
                </ListItem>
-               <ListItem button onClick={() => bClick('departments')}>
+               <ListItem button onClick={() => bClick("departments")}>
                   <ListItemAvatar>
                      <AccountTreeRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -194,7 +197,7 @@ export default function MiniDrawer() {
                   </ListItemAvatar>
                   <ListItemText primary='Deptartments' />
                </ListItem>
-               <ListItem button onClick={() => bClick('dept_manager')}>
+               <ListItem button onClick={() => bClick("dept_manager")}>
                   <ListItemAvatar>
                      <SupervisorAccountRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -202,7 +205,7 @@ export default function MiniDrawer() {
                   </ListItemAvatar>
                   <ListItemText primary='Department Managers' />
                </ListItem>
-               <ListItem button onClick={() => bClick('titles')}>
+               <ListItem button onClick={() => bClick("titles")}>
                   <ListItemAvatar>
                      <AssignmentIndRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -210,7 +213,7 @@ export default function MiniDrawer() {
                   </ListItemAvatar>
                   <ListItemText primary='Title' />
                </ListItem>
-               <ListItem button onClick={() => bClick('salaries')}>
+               <ListItem button onClick={() => bClick("salaries")}>
                   <ListItemAvatar>
                      <LocalAtmRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -219,7 +222,7 @@ export default function MiniDrawer() {
                   <ListItemText primary='Salaries' />
                </ListItem>
 
-               <ListItem button onClick={() => bClick('stats')}>
+               <ListItem button onClick={() => bClick("stats")}>
                   <ListItemAvatar>
                      <EqualizerRoundedIcon
                         style={{ fontSize: fs, fill: icolor }}
@@ -230,14 +233,14 @@ export default function MiniDrawer() {
 
                <Divider />
 
-               <ListItem button onClick={() => bClick('users')}>
+               <ListItem button onClick={() => bClick("users")}>
                   <ListItemAvatar>
                      <StarsRoundedIcon style={{ fontSize: fs, fill: icolor }} />
                   </ListItemAvatar>
                   <ListItemText primary='Admin Users' />
                </ListItem>
 
-               <ListItem button onClick={() => bClick('logs')}>
+               <ListItem button onClick={() => bClick("logs")}>
                   <ListItemAvatar>
                      <StorageIcon style={{ fontSize: fs, fill: icolor }} />
                   </ListItemAvatar>

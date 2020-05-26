@@ -644,6 +644,21 @@ body {
 }
 /* end cube */
 /* /////// End k3d objects ////// */
+.cubeWrapperFront {
+   /* for login page */
+   width: 345px;
+   height: 76px;
+   top: 0px;
+   animation-fill-mode: forwards;
+   -webkit-transition: all 0.5s ease-in-out;
+   transition: all 0.5s ease-in-out;
+   overflow: visible;
+   -moz-transform-style: preserve-3d;
+   -webkit-transform-style: preserve-3d;
+   transform-style: preserve-3d;
+   transform-origin: center center;
+}
+
 .cubeWrapper {
    /* for login page */
    width: 305px;
@@ -660,6 +675,7 @@ body {
 }
 
 .cubeWrapperFluid {
+   margin-right: 60px;
    height: 76px;
    top: 0px;
    animation-fill-mode: forwards;
