@@ -1,5 +1,5 @@
-import React from 'react';
-import MaterialTable from 'material-table';
+import React from "react";
+import MaterialTable from "material-table";
 
 export const EmployeesTable = (props) => {
    return (
@@ -8,20 +8,20 @@ export const EmployeesTable = (props) => {
             // other props
             actions={[
                {
-                  icon: 'info',
-                  tooltip: 'Details',
+                  icon: "info",
+                  tooltip: "Details",
                   onClick: (event, rowData) => {
                      // Do save operation
-                     props.setAlert2Class('displayNone');
+                     props.setAlert2Class("displayNone");
                      props.setEmpData(rowData);
                      props.getDetailsStart(rowData.emp_no);
                      props.setMsgArr(
                         props.cubeMsgNext(
-                           'Viewing Employee ' +
+                           "Viewing " +
                               rowData.first_name +
-                              ' ' +
+                              " " +
                               rowData.last_name,
-                           'info',
+                           "info",
                            props.msgArr
                         )
                      );
@@ -55,8 +55,8 @@ export const EmployeesTable = (props) => {
                         resolve();
                         props.setMsgArr(
                            props.cubeMsgNext(
-                              'New entry added to database',
-                              'success',
+                              "New entry added to database",
+                              "success",
                               props.msgArr
                            )
                         );
@@ -75,11 +75,11 @@ export const EmployeesTable = (props) => {
                               return { ...prevState, data };
                            });
                         }
-                        props.setAlert2Class('fadeInFast');
+                        props.setAlert2Class("fadeInFast");
                         props.setAlert2Msg(
-                           'NOTE: This is a demo so this data UPDATE will not persist.'
+                           "NOTE: This is a demo so this data UPDATE will not persist."
                         );
-                        props.setAlert2Severity('warning');
+                        props.setAlert2Severity("warning");
                      }, 600);
                   }),
                onRowDelete: (oldData) =>
@@ -95,8 +95,8 @@ export const EmployeesTable = (props) => {
                         //// finish
                         props.setMsgArr(
                            props.cubeMsgNext(
-                              'Removed employee',
-                              'Success',
+                              "Removed employee",
+                              "Success",
                               props.msgArr
                            )
                         );
@@ -108,11 +108,11 @@ export const EmployeesTable = (props) => {
                            ].anim
                         );
 
-                        props.setAlert2Class('fadeInFast');
+                        props.setAlert2Class("fadeInFast");
                         props.setAlert2Msg(
-                           'NOTE: This is a demo so this DELETE will not persist.'
+                           "NOTE: This is a demo so this DELETE will not persist."
                         );
-                        props.setAlert2Severity('warning');
+                        props.setAlert2Severity("warning");
                      }, 600);
                   }),
             }}
