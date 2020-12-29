@@ -28,6 +28,8 @@ export const Titles = () => {
       [cardClass, setCardClass] = useState('displayBlock'),
       [cubeWrapperAnim, setCubeWrapperAnim] = useState([]);
 
+const flex = React.useRef(false);
+
    const [state, setState] = useState({ columns: [], data: [] });
 
    const closeCard = () => {
